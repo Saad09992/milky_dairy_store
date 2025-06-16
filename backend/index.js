@@ -1,24 +1,10 @@
-import express from "express";
-import cors from "cors";
-import countRouter from "./routes/CountRouter.js";
-import connection from "./config/db.js";
+require("dotenv").config({ path: __dirname + "/.env" });
+const http = require("http");
+const app = require("./app");
+const { logger } = require("./utils/logger");
 
-const PORT = process.env.PORT || 3000;
+const server = http.createServer(app);
 
-const app = express();
-connection.connect(function (err) {
-  if (err) throw err;
-  console.log("Database connected successfully");
-});
-app.use(express.json());
-app.use(cors());
+const PORT = process.env.PORT || 8080;
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-
-app.use("/", countRouter);
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+server.listen(PORT, () => logger.info(`Magic happening on port: ${PORT}`));
