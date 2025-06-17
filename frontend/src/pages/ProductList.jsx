@@ -1,22 +1,19 @@
-import { Button, Input, Select } from "@windmill/react-ui";
+import { Button, Select } from "@windmill/react-ui";
 import Product from "../components/Product";
 import Spinner from "../components/Spinner";
 import useProduct from "../hooks/useProduct";
-import { Search } from "react-feather";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 const ProductList = () => {
   const { products, loading, page, setPage } = useProduct();
-  const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("default");
+  const location = useLocation();
+  const searchQuery = location.state?.searchQuery || "";
 
   const handleChange = (page) => {
     setPage(page);
     window.scrollTo({ behavior: "smooth", top: 0 });
-  };
-
-  const handleSearch = (e) => {
-    setSearchQuery(e.target.value);
   };
 
   const handleSort = (e) => {
@@ -47,20 +44,8 @@ const ProductList = () => {
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-8">
-      {/* Search and Filter Section */}
-      <div className="mb-8 flex flex-col sm:flex-row gap-4 items-center justify-between">
-        <div className="w-full sm:w-96 relative">
-          <Input
-            className="pl-10"
-            placeholder="Search products..."
-            value={searchQuery}
-            onChange={handleSearch}
-          />
-          <Search
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-            size={20}
-          />
-        </div>
+      {/* Filter Section */}
+      <div className="mb-8 flex flex-col sm:flex-row gap-4 items-center justify-end">
         <div className="w-full sm:w-48">
           <Select value={sortBy} onChange={handleSort}>
             <option value="default">Sort by: Default</option>

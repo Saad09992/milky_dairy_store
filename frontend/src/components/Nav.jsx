@@ -4,18 +4,21 @@ import {
   Dropdown,
   DropdownItem,
   Transition,
+  Input,
 } from "@windmill/react-ui";
 import useCart from "../hooks/useCart";
 import useAuth from "../hooks/useAuth";
 import { useState, useRef, useEffect } from "react";
-import { LogOut, ShoppingCart, User } from "react-feather";
-import { Link } from "react-router-dom";
+import { LogOut, ShoppingCart, User, Search, X } from "react-feather";
+import { Link, useNavigate } from "react-router-dom";
 
 const Nav = () => {
   const { cartTotal } = useCart();
   const { userData, loggedIn, logout } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -36,27 +39,65 @@ const Nav = () => {
     setIsDropdownOpen(false);
   };
 
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSearchSubmit = (e) => {
+    if (e.key === 'Enter') {
+      navigate('/', { state: { searchQuery } });
+    }
+  };
+
+  const handleClearSearch = () => {
+    setSearchQuery("");
+    navigate('/', { state: { searchQuery: "" } });
+  };
+
   return (
-    <nav className="flex items-center justify-between px-4 sm:px-6 lg:px-8 xl:px-36 py-4 backdrop-blur-md bg-white/90 shadow-sm shadow-black/5 fixed w-full top-0 z-50 border-b border-gray-100">
+    <nav className="flex items-center justify-between px-4 sm:px-6 lg:px-8 xl:px-36 py-4 backdrop-blur-lg bg-white/95 shadow-sm shadow-black/5 fixed w-full top-0 z-50 border-b border-gray-100/50">
       <Link
         to="/"
         className="text-gray-900 text-xl sm:text-2xl font-bold hover:text-blue-600 transition-all duration-300 ease-out transform hover:scale-105 dark:text-gray-100 dark:hover:text-blue-400"
       >
-        <h1 className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+        <h1 className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
           Milky Dairy
         </h1>
       </Link>
 
-      <div className="flex items-center gap-2 sm:gap-3">
+      <div className="hidden md:flex items-center flex-1 max-w-xl mx-8">
+        <div className="relative w-full">
+          <Input
+            type="text"
+            placeholder="Search products..."
+            value={searchQuery}
+            onChange={handleSearch}
+            onKeyDown={handleSearchSubmit}
+            className="w-full pl-10 pr-10 py-2 rounded-lg border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-colors duration-200 bg-white shadow-sm"
+          />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+          {searchQuery && (
+            <button
+              onClick={handleClearSearch}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 hover:text-gray-600 transition-colors"
+              aria-label="Clear search"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3 sm:gap-4">
         {!loggedIn ? (
           <>
             <Link to="/login">
-              <button className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-all duration-200 ease-out border border-gray-200 hover:border-gray-300 hover:shadow-sm active:scale-95">
+              <button className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-all duration-200 ease-out border border-gray-200 hover:border-gray-300 hover:shadow-sm active:scale-95 hover:shadow-md">
                 Login
               </button>
             </Link>
             <Link to="/cart" className="relative">
-              <button className="flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 ease-out border border-gray-200 hover:border-blue-200 hover:shadow-sm active:scale-95 relative">
+              <button className="flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 ease-out border border-gray-200 hover:border-blue-200 hover:shadow-sm active:scale-95 relative hover:shadow-md">
                 <span className="hidden sm:block">Cart</span>
                 <ShoppingCart className="w-4 h-4 sm:hidden" />
                 {cartTotal > 0 && (
@@ -70,7 +111,7 @@ const Nav = () => {
         ) : (
           <>
             <Link to="/cart" className="relative">
-              <button className="flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 ease-out border border-gray-200 hover:border-blue-200 hover:shadow-sm active:scale-95 relative">
+              <button className="flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 ease-out border border-gray-200 hover:border-blue-200 hover:shadow-sm active:scale-95 relative hover:shadow-md">
                 <span className="hidden sm:block">Cart</span>
                 <ShoppingCart className="w-4 h-4 sm:hidden" />
                 {cartTotal > 0 && (
@@ -84,7 +125,7 @@ const Nav = () => {
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200 ease-out border border-gray-200 hover:border-purple-200 hover:shadow-sm active:scale-95"
+                className="flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200 ease-out border border-gray-200 hover:border-purple-200 hover:shadow-sm active:scale-95 hover:shadow-md"
                 aria-haspopup="true"
                 aria-expanded={isDropdownOpen}
               >
@@ -107,18 +148,9 @@ const Nav = () => {
                 </svg>
               </button>
 
-              {/* <Transition
-                show={isDropdownOpen}
-                enter="transition ease-out duration-300 transform"
-                enterFrom="opacity-0 scale-95 translate-y-2"
-                enterTo="opacity-100 scale-100 translate-y-0"
-                leave="transition ease-in duration-200 transform"
-                leaveFrom="opacity-100 scale-100 translate-y-0"
-                leaveTo="opacity-0 scale-95 translate-y-2"
-              > */}
               {isDropdownOpen && (
-                <div className="absolute right-0 mt-3 w-56 bg-white/95 backdrop-blur-md rounded-xl shadow-xl border border-gray-200 z-50 overflow-hidden">
-                  <div className="px-4 py-3 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-gray-100">
+                <div className="absolute right-0 mt-3 w-56 bg-white/95 backdrop-blur-lg rounded-xl shadow-xl border border-gray-200/50 z-50 overflow-hidden transform transition-all duration-200 ease-out">
+                  <div className="px-4 py-3 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-gray-100/50">
                     <div className="flex flex-col">
                       <p className="text-sm font-semibold text-gray-900 truncate">
                         {userData?.fullname || "User"}
@@ -167,7 +199,6 @@ const Nav = () => {
                   </div>
                 </div>
               )}
-              {/* </Transition> */}
             </div>
           </>
         )}

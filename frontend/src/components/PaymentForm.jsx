@@ -1,10 +1,6 @@
 import {
   Button,
   HelperText,
-  Card,
-  CardBody,
-  CardHeader,
-  Input,
   Label,
 } from "@windmill/react-ui";
 import useCart from "../hooks/useCart";
@@ -13,6 +9,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import OrderSummary from "./OrderSummary";
 import OrderService from "../services/order.service";
+import { CreditCard, DollarSign } from "react-feather";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { useDispatch } from "react-redux";
+import { createOrder } from "../store/methods/orderMethod";
+import toast from "react-hot-toast";
+import Input from "./ui/Input";
 
 const PaymentForm = ({ previousStep, addressData }) => {
   const { cartSubtotal, cartTotal, cartData } = useCart();
@@ -21,123 +24,134 @@ const PaymentForm = ({ previousStep, addressData }) => {
   const [error, setError] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("cash");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-
-    if (paymentMethod === "cash") {
-      // Validate cash amount
-      const amount = parseFloat(cashAmount);
-      if (isNaN(amount) || amount < cartSubtotal) {
-        setError(`Amount must be at least ${formatCurrency(cartSubtotal)}`);
-        return;
-      }
-
+  const formik = useFormik({
+    initialValues: {
+      paymentMethod: "cash",
+      cashAmount: cartTotal,
+    },
+    validationSchema: Yup.object({
+      cashAmount: Yup.number()
+        .min(cartSubtotal, `Amount must be at least ${formatCurrency(cartSubtotal)}`)
+        .required("Cash amount is required"),
+    }),
+    onSubmit: async (values, { setSubmitting }) => {
       try {
-        setIsProcessing(true);
-        await OrderService.createOrder(
-          cartSubtotal,
-          cartTotal,
-          "CASH",
-          "CASH",
-          {
-            cashAmount: amount,
-            change: amount - cartSubtotal,
-          }
-        );
-        setIsProcessing(false);
+        const orderData = {
+          address: addressData,
+          paymentMethod: values.paymentMethod,
+          cashAmount: values.cashAmount,
+          total: cartTotal,
+        };
+        await dispatch(createOrder(orderData)).unwrap();
+        toast.success("Order placed successfully!");
         navigate("/cart/success", {
           state: {
             fromPaymentPage: true,
           },
         });
       } catch (error) {
-        setIsProcessing(false);
-        setError(error.message || "Failed to process order");
+        toast.error(error.message || "Failed to place order");
+      } finally {
+        setSubmitting(false);
       }
-    } else {
-      // Stripe payment (just for show)
-      setError("Stripe payment is not implemented yet");
-    }
-  };
+    },
+  });
 
   return (
-    <div className="w-full md:w-1/2">
-      <h1 className="text-3xl font-semibold text-center mb-2">Checkout</h1>
+    <div className="space-y-6">
       <OrderSummary />
-
-      <div className="mt-6">
-        <div className="mb-4">
-          <Label className="mb-2">Payment Method</Label>
-          <div className="space-y-2">
-            <div className="flex items-center">
-              <input
-                type="radio"
-                name="payment"
-                value="cash"
-                checked={paymentMethod === "cash"}
-                onChange={(e) => setPaymentMethod(e.target.value)}
-                className="mr-2"
-              />
-              <span>Cash Payment</span>
-            </div>
-            <div className="flex items-center">
-              <input
-                type="radio"
-                name="payment"
-                value="stripe"
-                checked={paymentMethod === "stripe"}
-                onChange={(e) => setPaymentMethod(e.target.value)}
-                className="mr-2"
-              />
-              <span>Stripe Payment (Coming Soon)</span>
-            </div>
+      
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100">
+          <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+            <CreditCard className="w-5 h-5 text-purple-600" />
           </div>
+          <h2 className="text-xl font-semibold text-gray-900">Payment Method</h2>
         </div>
 
-        {paymentMethod === "cash" && (
-          <Label>
-            <span>Cash Amount</span>
-            <Input
-              type="number"
-              step="0.01"
-              min={cartSubtotal}
-              value={cashAmount}
-              onChange={(e) => setCashAmount(e.target.value)}
-              placeholder={`Enter amount (minimum ${formatCurrency(
-                cartSubtotal
-              )})`}
-              className="mt-1"
-            />
-            {error && <HelperText valid={false}>{error}</HelperText>}
-            {cashAmount && parseFloat(cashAmount) >= cartSubtotal && (
-              <HelperText valid={true}>
-                Change: {formatCurrency(parseFloat(cashAmount) - cartSubtotal)}
-              </HelperText>
-            )}
-          </Label>
-        )}
-
-        {paymentMethod === "stripe" && (
-          <div className="p-4 bg-gray-50 rounded-lg">
-            <p className="text-gray-600 text-center">
-              Stripe payment integration coming soon!
-            </p>
+        <div className="space-y-6">
+          <div className="space-y-3">
+            <label className="flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors duration-200">
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="cash"
+                checked={formik.values.paymentMethod === "cash"}
+                onChange={formik.handleChange}
+                className="form-radio text-blue-600 focus:ring-blue-500"
+              />
+              <div className="ml-3 flex items-center gap-2">
+                <DollarSign className="w-5 h-5 text-gray-600" />
+                <span className="text-gray-900 font-medium">Cash Payment</span>
+              </div>
+            </label>
+            <label className="flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors duration-200">
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="stripe"
+                checked={formik.values.paymentMethod === "stripe"}
+                onChange={formik.handleChange}
+                className="form-radio text-blue-600 focus:ring-blue-500"
+              />
+              <div className="ml-3 flex items-center gap-2">
+                <CreditCard className="w-5 h-5 text-gray-600" />
+                <span className="text-gray-900 font-medium">Stripe Payment (Coming Soon)</span>
+              </div>
+            </label>
           </div>
-        )}
 
-        <div className="flex justify-between mt-4">
-          <Button onClick={previousStep} layout="outline" size="small">
-            Back
-          </Button>
-          <Button
-            disabled={isProcessing || (paymentMethod === "cash" && !cashAmount)}
-            onClick={handleSubmit}
-            size="small"
-          >
-            {isProcessing ? "Processing..." : "Place Order"}
-          </Button>
+          {formik.values.paymentMethod === "cash" && (
+            <div className="space-y-4">
+              <Label>
+                <span className="text-gray-900 font-medium">Cash Amount</span>
+                <Input
+                  type="number"
+                  name="cashAmount"
+                  placeholder="Enter cash amount"
+                  valid={formik.touched.cashAmount && !formik.errors.cashAmount}
+                  error={formik.touched.cashAmount && formik.errors.cashAmount}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.cashAmount}
+                />
+                {formik.touched.cashAmount && formik.errors.cashAmount && (
+                  <HelperText valid={false} className="text-red-600 mt-1">
+                    {formik.errors.cashAmount}
+                  </HelperText>
+                )}
+              </Label>
+            </div>
+          )}
+
+          {formik.values.paymentMethod === "stripe" && (
+            <div className="p-6 bg-gray-50 rounded-lg border border-gray-200">
+              <p className="text-gray-600 text-center font-medium">
+                Stripe payment integration coming soon!
+              </p>
+            </div>
+          )}
+
+          <div className="flex justify-between pt-4 border-t border-gray-100">
+            <Button 
+              onClick={previousStep} 
+              layout="outline" 
+              size="small"
+              className="hover:bg-gray-50 hover:text-gray-900 transition-colors duration-200"
+            >
+              Back
+            </Button>
+            <Button
+              disabled={formik.isSubmitting || (formik.values.paymentMethod === "cash" && !formik.values.cashAmount)}
+              type="submit"
+              size="small"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {formik.isSubmitting ? "Processing..." : "Place Order"}
+            </Button>
+          </div>
         </div>
       </div>
     </div>

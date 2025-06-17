@@ -20,30 +20,51 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import useAuth from "../hooks/useAuth";
 import { useDispatch } from "react-redux";
-import { createReview } from "../store/methods/reviewMethod";
+import { createReview, updateReview } from "../store/methods/reviewMethod";
 
 const reviewSchema = Yup.object().shape({
-  rating: Yup.number().required("Rating is required").min(1).max(5),
-  comment: Yup.string().required("Comment is required"),
+  rating: Yup.number()
+    .min(1, "Rating is required")
+    .max(5, "Rating must be between 1 and 5")
+    .required("Rating is required"),
+  comment: Yup.string()
+    .min(10, "Comment must be at least 10 characters")
+    .max(500, "Comment must not exceed 500 characters")
+    .required("Comment is required"),
 });
 
-const ReviewModal = ({ product_id, reviews }) => {
+const ReviewModal = ({ isOpen, onClose, productId, review = null }) => {
   const { userData } = useAuth();
   const dispatch = useDispatch();
-  const review = reviews.reviews.find((elm) => elm.user_id === userData?.user_id);
-  const { reviewExist } = reviews;
-  const [isOpen, setIsOpen] = useState(false);
+  const { reviewExist } = review;
   const navigate = useNavigate();
 
   const formik = useFormik({
-    initialValues: { rating: 5, comment: "" },
+    initialValues: {
+      rating: review?.rating || 0,
+      comment: review?.comment || "",
+    },
     validationSchema: reviewSchema,
-    onSubmit: async (values, { setSubmitting, resetForm }) => {
+    onSubmit: async (values, { setSubmitting }) => {
       try {
-        await dispatch(createReview({ productId: product_id, ...values })).unwrap();
-        toast.success("Review submitted successfully!");
-        resetForm();
-        setIsOpen(false);
+        if (review) {
+          await dispatch(
+            updateReview({
+              reviewId: review.id,
+              reviewData: values,
+            })
+          ).unwrap();
+          toast.success("Review updated successfully!");
+        } else {
+          await dispatch(
+            createReview({
+              productId,
+              reviewData: values,
+            })
+          ).unwrap();
+          toast.success("Review submitted successfully!");
+        }
+        onClose();
         navigate(0);
       } catch (error) {
         toast.error(error.message || "Failed to submit review");
@@ -53,72 +74,91 @@ const ReviewModal = ({ product_id, reviews }) => {
     },
   });
 
-  const toggleModal = () => {
-    setIsOpen(!isOpen);
-  };
+  if (!isOpen) return null;
 
   return (
-    <>
-      {isOpen && <Backdrop />}
-      <div>
-        <Button onClick={toggleModal}>{reviewExist ? "Edit Review" : "Add Review"}</Button>
+    <div className="fixed inset-0 z-50 overflow-y-auto">
+      <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        <div className="fixed inset-0 transition-opacity" aria-hidden="true">
+          <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+        </div>
+
+        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+          <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div className="sm:flex sm:items-start">
+              <div className="mt-3 text-center sm:mt-0 sm:text-left w-full">
+                <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
+                  {review ? "Edit Review" : "Write a Review"}
+                </h3>
+                <form onSubmit={formik.handleSubmit} className="space-y-6">
+                  <div>
+                    <Label className="block mb-2">
+                      <span className="text-gray-900 font-medium">Rating</span>
+                    </Label>
+                    <ReactStars
+                      count={5}
+                      value={formik.values.rating}
+                      onChange={(newRating) => {
+                        formik.setFieldValue("rating", newRating);
+                      }}
+                      size={30}
+                      color2="#F59E0B"
+                      half={false}
+                    />
+                    {formik.touched.rating && formik.errors.rating && (
+                      <HelperText valid={false} className="text-red-600 mt-1">
+                        {formik.errors.rating}
+                      </HelperText>
+                    )}
+                  </div>
+
+                  <Label className="block">
+                    <span className="text-gray-900 font-medium">Comment</span>
+                    <Input
+                      as="textarea"
+                      name="comment"
+                      rows={4}
+                      placeholder="Share your experience with this product..."
+                      valid={formik.touched.comment && !formik.errors.comment}
+                      error={formik.touched.comment && formik.errors.comment}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.comment}
+                    />
+                    {formik.touched.comment && formik.errors.comment && (
+                      <HelperText valid={false} className="text-red-600 mt-1">
+                        {formik.errors.comment}
+                      </HelperText>
+                    )}
+                  </Label>
+
+                  <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+                    <Button
+                      type="submit"
+                      disabled={formik.isSubmitting}
+                      className="w-full sm:w-auto sm:ml-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {formik.isSubmitting
+                        ? "Submitting..."
+                        : review
+                        ? "Update Review"
+                        : "Submit Review"}
+                    </Button>
+                    <Button
+                      type="button"
+                      onClick={onClose}
+                      className="mt-3 sm:mt-0 w-full sm:w-auto bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 transition-all duration-200"
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <Modal isOpen={isOpen} onClose={toggleModal}>
-        <ModalHeader>Write a Review</ModalHeader>
-        <form onSubmit={formik.handleSubmit}>
-          <ModalBody>
-            <Label className="mt-4">
-              <span>Rating</span>
-              <Input
-                type="number"
-                name="rating"
-                min="1"
-                max="5"
-                className="mt-1"
-                valid={formik.touched.rating && !formik.errors.rating}
-                error={formik.touched.rating && formik.errors.rating}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.rating}
-              />
-              {formik.touched.rating && formik.errors.rating && (
-                <div className="text-red-500 text-sm mt-1">{formik.errors.rating}</div>
-              )}
-            </Label>
-
-            <Label className="mt-4">
-              <span>Comment</span>
-              <Textarea
-                name="comment"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                rows="4"
-                valid={formik.touched.comment && !formik.errors.comment}
-                error={formik.touched.comment && formik.errors.comment}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.comment}
-              />
-              {formik.touched.comment && formik.errors.comment && (
-                <div className="text-red-500 text-sm mt-1">{formik.errors.comment}</div>
-              )}
-            </Label>
-          </ModalBody>
-
-          <ModalFooter>
-            <div className="hidden sm:block">
-              <Button layout="outline" onClick={toggleModal} type="button">
-                Cancel
-              </Button>
-            </div>
-            <div className="hidden sm:block">
-              <Button type="submit" disabled={formik.isSubmitting}>
-                {formik.isSubmitting ? "Submitting..." : "Submit Review"}
-              </Button>
-            </div>
-          </ModalFooter>
-        </form>
-      </Modal>
-    </>
+    </div>
   );
 };
 

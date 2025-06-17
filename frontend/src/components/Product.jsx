@@ -53,38 +53,49 @@ const Product = ({ product }) => {
   return (
     <div className="w-full group">
       <Link to={`/products/${product.slug}`} className="block">
-        <div className="relative bg-white rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+        <div className="relative bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-gray-200">
           {/* Product Image */}
-          <div className="relative h-48 bg-gray-100">
+          <div className="relative h-48 bg-gray-50">
             <img
-              className="w-full h-full object-contain object-center transform group-hover:scale-105 transition-transform duration-300"
+              className="w-full h-full object-contain object-center transform group-hover:scale-105 transition-transform duration-500 ease-out"
               src={product.image_url}
               alt={product.name}
               loading="lazy"
               decoding="async"
               title={product.name}
             />
+            <div className="absolute inset-0 bg-gradient-to-t from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </div>
 
           {/* Product Info */}
-          <div className="p-4">
-            <h2 className="text-lg font-medium text-gray-900 mb-2 line-clamp-1">
+          <div className="p-4 sm:p-5">
+            <h2 className="text-lg font-medium text-gray-900 mb-2 line-clamp-1 group-hover:text-blue-600 transition-colors duration-200">
               {product.name}
             </h2>
 
             {/* Price */}
-            <p className="text-xl font-semibold text-gray-900 mb-4">
+            <p className="text-xl font-semibold text-gray-900 mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               {formatCurrency(product.price)}
             </p>
 
             {/* Add to Cart Button or Quantity Controls */}
             {cartItem ? (
               <div className="flex items-center justify-between w-full">
-                <Button size="small" layout="outline" onClick={handleDecrement}>
+                <Button 
+                  size="small" 
+                  layout="outline" 
+                  onClick={handleDecrement}
+                  className="hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors duration-200"
+                >
                   -
                 </Button>
-                <span className="mx-2 font-semibold">{cartItem.quantity}</span>
-                <Button size="small" layout="outline" onClick={handleIncrement}>
+                <span className="mx-2 font-semibold text-gray-700">{cartItem.quantity}</span>
+                <Button 
+                  size="small" 
+                  layout="outline" 
+                  onClick={handleIncrement}
+                  className="hover:bg-green-50 hover:text-green-600 hover:border-green-200 transition-colors duration-200"
+                >
                   +
                 </Button>
               </div>
@@ -94,14 +105,14 @@ const Product = ({ product }) => {
                   isLoading ? (
                     <ClipLoader
                       cssOverride={{ margin: "0 auto" }}
-                      color="#123abc"
+                      color="#ffffff"
                       size={20}
                     />
                   ) : (
                     <ShoppingCart className="mr-2" size={18} />
                   )
                 }
-                className="w-full bg-gray-900 text-white hover:bg-gray-800 transition-colors duration-200"
+                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-sm hover:shadow-md active:scale-95"
                 onClick={addToCart}
                 disabled={isLoading}
               >
