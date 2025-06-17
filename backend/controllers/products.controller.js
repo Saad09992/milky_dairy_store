@@ -8,7 +8,11 @@ const getAllProducts = async (req, res) => {
 };
 
 const createProduct = async (req, res) => {
-  const newProduct = await productService.addProduct(req.body);
+  const productData = {
+    ...req.body,
+    image_url: req.file ? req.file.filename : null,
+  };
+  const newProduct = await productService.addProduct(productData);
   res.status(200).json(newProduct);
 };
 
@@ -28,15 +32,13 @@ const getProductByName = async (req, res) => {
 };
 
 const updateProduct = async (req, res) => {
-  const { name, price, description, image_url } = req.body;
   const { id } = req.params;
-  const updatedProduct = await productService.updateProduct({
-    name,
-    price,
-    description,
-    image_url,
+  const productData = {
+    ...req.body,
+    image_url: req.file ? req.file.filename : null,
     id,
-  });
+  };
+  const updatedProduct = await productService.updateProduct(productData);
   res.status(200).json(updatedProduct);
 };
 

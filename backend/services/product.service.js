@@ -23,9 +23,20 @@ class ProductService {
 
   addProduct = async (data) => {
     try {
-      return await createProductDb(data);
+      // Generate slug from name
+      const slug = data.name
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+
+      const body = {
+        ...data,
+        slug: slug,
+      };
+
+      return await createProductDb(body);
     } catch (error) {
-      throw new ErrorHandler(error.statusCode, error.message);
+      throw new ErrorHandler(error.statusCode || 500, error.message);
     }
   };
 
@@ -70,7 +81,16 @@ class ProductService {
       if (!product) {
         throw new ErrorHandler(404, "product not found");
       }
-      return await updateProductDb(data);
+      const slug = data.name
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+
+      const body = {
+        ...data,
+        slug: slug,
+      };
+      return await updateProductDb(body);
     } catch (error) {
       throw new ErrorHandler(error.statusCode, error.message);
     }

@@ -18,7 +18,7 @@ app.use(morgan("dev"));
 app.use(compression());
 app.use(helmet());
 app.use(cookieParser());
-
+app.use("/images", express.static("public/images"));
 app.use("/api", routes);
 
 app.get("/", (req, res) =>
