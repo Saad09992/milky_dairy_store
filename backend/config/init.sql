@@ -25,7 +25,6 @@ CREATE TABLE public.order_item
 );
 
 CREATE TYPE "payment" AS ENUM (
-  'PAYSTACK',
   'STRIPE',
   'CASH'
 );
@@ -92,14 +91,6 @@ CREATE TABLE public.users
     PRIMARY KEY (user_id)
 );
 
-CREATE TABLE public.cash_payments (
-    id SERIAL NOT NULL,
-    order_id integer NOT NULL,
-    amount real NOT NULL,
-    date timestamp without time zone DEFAULT CURRENT_DATE NOT NULL,
-    PRIMARY KEY (id),
-    FOREIGN KEY (order_id) REFERENCES public.orders (order_id) ON DELETE CASCADE
-);
 
 ALTER TABLE public.cart
     ADD FOREIGN KEY (user_id)

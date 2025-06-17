@@ -26,6 +26,7 @@ class OrderService {
 
   getOrderById = async (data) => {
     try {
+      console.log(data);
       const order = await getOrderDb(data);
       if (!order) {
         throw new ErrorHandler(404, "Order does not exist");

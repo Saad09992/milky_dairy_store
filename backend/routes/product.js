@@ -19,11 +19,10 @@ router
   .get(getAllProducts)
   .post(verifyToken, verifyAdmin, createProduct);
 
+router.route("/:slug").get(getProductBySlug);
+
 router
-  .route("/:slug")
-  .get(getProductBySlug)
-  // .get(getProduct)
-  // .get(getProductByName)
+  .route("/:id")
   .put(verifyToken, verifyAdmin, updateProduct)
   .delete(verifyToken, verifyAdmin, deleteProduct);
 

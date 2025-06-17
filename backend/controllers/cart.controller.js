@@ -11,7 +11,7 @@ const getCart = async (req, res) => {
 // add item to cart
 const addItem = async (req, res) => {
   const cart_id = req.user.cart_id;
-
+  console.log(req.body);
   const cart = await cartService.addItem({ ...req.body, cart_id });
   res.status(200).json({ data: cart });
 };
@@ -29,7 +29,6 @@ const deleteItem = async (req, res) => {
 const increaseItemQuantity = async (req, res) => {
   const { product_id } = req.body;
   const cart_id = req.user.cart_id;
-
   const cart = await cartService.increaseQuantity({ cart_id, product_id });
   res.json(cart);
 };

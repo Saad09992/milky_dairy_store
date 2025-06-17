@@ -15,13 +15,14 @@ const getAllProductsDb = async ({ limit, offset }) => {
 const createProductDb = async ({ name, price, description, image_url }) => {
   console.log(name, price, description, image_url);
   const { rows: product } = await pool.query(
-    "INSERT INTO products(name, price, description, image_url) VALUES($1, $2, $3, $4) returning *",
-    [name, price, description, image_url]
+    "INSERT INTO products(name, price, description, image_url, slug)VALUES ($1, $2, $3, $4, $5)ON CONFLICT (name) DO NOTHING RETURNING *;",
+    [name, price, description, image_url, name]
   );
   return product[0];
 };
 
 const getProductDb = async ({ id }) => {
+  console.log(id);
   const { rows: product } = await pool.query(
     `select products.*, trunc(avg(reviews.rating),1) as avg_rating, count(reviews.*) from products
         LEFT JOIN reviews
@@ -59,7 +60,7 @@ const getProductByNameDb = async ({ name }) => {
 
 const updateProductDb = async ({ name, price, description, image_url, id }) => {
   const { rows: product } = await pool.query(
-    "UPDATE products set name = $1, price = $2, description = $3 image_url = $4 where product_id = $5 returning *",
+    "UPDATE products set name = $1, price = $2, description = $3, image_url = $4 where product_id = $5 returning *",
     [name, price, description, image_url, id]
   );
   return product[0];

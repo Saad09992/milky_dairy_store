@@ -28,13 +28,13 @@ const getProductByName = async (req, res) => {
   res.status(200).json(product);
 };
 const updateProduct = async (req, res) => {
-  const { name, price, description } = req.body;
+  const { name, price, description, image_url } = req.body;
   const { id } = req.params;
-
   const updatedProduct = await productService.updateProduct({
     name,
     price,
     description,
+    image_url,
     id,
   });
   res.status(200).json(updatedProduct);
@@ -42,7 +42,6 @@ const updateProduct = async (req, res) => {
 
 const deleteProduct = async (req, res) => {
   const { id } = req.params;
-
   const deletedProduct = await productService.removeProduct(id);
   res.status(200).json(deletedProduct);
 };

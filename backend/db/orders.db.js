@@ -8,7 +8,6 @@ const createOrderDb = async ({
   ref,
   paymentMethod,
 }) => {
-  // create an order
   const { rows: order } = await pool.query(
     "INSERT INTO orders(user_id, status, amount, total, ref, payment_method) VALUES($1, 'complete', $2, $3, $4, $5) returning *",
     [userId, amount, itemTotal, ref, paymentMethod]
@@ -50,6 +49,7 @@ const getOrderDb = async ({ id, userId }) => {
       where orders.order_id = $1 AND orders.user_id = $2`,
     [id, userId]
   );
+  console.log(order);
   return order;
 };
 

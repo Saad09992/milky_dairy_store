@@ -15,7 +15,6 @@ const createOrder = async (req, res) => {
     ref,
   });
 
-  // delete all items from cart_items table for the user after order has been processed
   await cartService.emptyCart(cartId);
 
   res.status(201).json(newOrder);

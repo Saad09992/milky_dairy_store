@@ -26,6 +26,7 @@ const getCartDb = async (userId) => {
 
 // add item to cart
 const addItemDb = async ({ cart_id, product_id, quantity }) => {
+  console.log(product_id, quantity);
   await pool.query(
     `INSERT INTO cart_item(cart_id, product_id, quantity) 
          VALUES($1, $2, $3) ON CONFLICT (cart_id, product_id) 

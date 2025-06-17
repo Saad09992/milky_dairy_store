@@ -6,7 +6,7 @@ const {
 } = require("../controllers/orders.controller");
 const verifyToken = require("../middleware/verifyToken");
 
-router.route("/create").post(verifyToken, createOrder);
+router.route("/").post(verifyToken, createOrder);
 
 router.route("/").get(verifyToken, getAllOrders);
 

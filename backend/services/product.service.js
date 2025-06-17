@@ -65,7 +65,7 @@ class ProductService {
 
   updateProduct = async (data) => {
     try {
-      const product = await getProductDb(data.id);
+      const product = await getProductDb(data);
       if (!product) {
         throw new ErrorHandler(404, "product not found");
       }
@@ -77,11 +77,15 @@ class ProductService {
 
   removeProduct = async (id) => {
     try {
-      const product = await getProductDb(id);
+      const data = {
+        id,
+      };
+      const product = await getProductDb(data);
+      console.log(product);
       if (!product) {
         throw new ErrorHandler(404, "product not found");
       }
-      return await deleteProductDb(id);
+      return await deleteProductDb(data);
     } catch (error) {
       throw new ErrorHandler(error.statusCode, error.message);
     }

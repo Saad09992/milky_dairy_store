@@ -10,13 +10,13 @@ const {
 
 router.use(verifyToken);
 // get cart items
-router.route("/").get(getCart);
+router.route("/").get(getCart).post(addItem).delete(deleteItem);
 
 // add item to cart
-router.route("/add").post(addItem);
+// router.route("/add").post(addItem);
 
 // delete item from cart
-router.route("/delete").delete(deleteItem);
+// router.route("/delete").delete(deleteItem);
 
 // increment item quantity
 router.route("/increment").put(increaseItemQuantity);
