@@ -70,7 +70,7 @@ CREATE TABLE public.reviews
     rating integer NOT NULL,
     product_id integer NOT NULL,
     date date NOT NULL,
-    id integer NOT NULL,
+    id SERIAL NOT NULL,
     PRIMARY KEY (user_id, product_id)
 );
 

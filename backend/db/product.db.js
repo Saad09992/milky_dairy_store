@@ -22,7 +22,6 @@ const createProductDb = async ({ name, price, description, image_url }) => {
 };
 
 const getProductDb = async ({ id }) => {
-  console.log(id);
   const { rows: product } = await pool.query(
     `select products.*, trunc(avg(reviews.rating),1) as avg_rating, count(reviews.*) from products
         LEFT JOIN reviews

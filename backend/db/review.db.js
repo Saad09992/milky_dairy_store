@@ -1,10 +1,9 @@
 const pool = require("../config");
 
-const getReviewsDb = async ({ productId, userId }) => {
-  // check if current logged user review exist for the product
+const getReviewsDb = async ({ product_id }) => {
   const reviewExist = await pool.query(
-    "SELECT EXISTS (SELECT * FROM reviews where product_id = $1 and user_id = $2)",
-    [productId, userId]
+    "SELECT EXISTS (SELECT * FROM reviews where product_id = $1)",
+    [product_id]
   );
 
   // get reviews associated with the product
@@ -13,7 +12,7 @@ const getReviewsDb = async ({ productId, userId }) => {
         join users 
         on users.user_id = reviews.user_id
         WHERE product_id = $1`,
-    [productId]
+    [product_id]
   );
   return {
     reviewExist: reviewExist.rows[0].exists,
@@ -21,20 +20,22 @@ const getReviewsDb = async ({ productId, userId }) => {
   };
 };
 
-const createReviewDb = async ({ productId, content, rating, userId }) => {
+const createReviewDb = async ({ product_id, content, rating, userId }) => {
   const { rows: review } = await pool.query(
-    `INSERT INTO reviews(user_id, product_id, content, rating) 
-       VALUES($1, $2, $3, $4) returning *
-      `,
-    [userId, productId, content, rating]
+    `INSERT INTO reviews(user_id, product_id, content, rating, date) 
+     VALUES($1, $2, $3, $4, CURRENT_DATE) 
+     RETURNING *`,
+    [userId, product_id, content, rating]
   );
   return review[0];
 };
 
 const updateReviewDb = async ({ content, rating, id }) => {
   const { rows: review } = await pool.query(
-    `UPDATE reviews set content = $1, rating = $2 where id = $3 returning *
-      `,
+    `UPDATE reviews 
+     SET content = $1, rating = $2, date = CURRENT_DATE 
+     WHERE id = $3 
+     RETURNING *`,
     [content, rating, id]
   );
   return review[0];

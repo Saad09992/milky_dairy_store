@@ -6,9 +6,6 @@ const {
   updateProduct,
   deleteProduct,
   getProductByName,
-  getProductReviews,
-  createProductReview,
-  updateProductReview,
   getProductBySlug,
 } = require("../controllers/products.controller");
 const verifyAdmin = require("../middleware/verifyAdmin");
@@ -25,11 +22,5 @@ router
   .route("/:id")
   .put(verifyToken, verifyAdmin, updateProduct)
   .delete(verifyToken, verifyAdmin, deleteProduct);
-
-router
-  .route("/:id/reviews")
-  .get(getProductReviews)
-  .post(verifyToken, createProductReview)
-  .put(verifyToken, updateProductReview);
 
 module.exports = router;
