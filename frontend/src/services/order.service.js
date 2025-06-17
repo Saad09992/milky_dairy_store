@@ -2,12 +2,12 @@ import api from "../api/baseUrl";
 
 class OrderService {
   createOrder(amount, itemTotal, ref, paymentMethod, paymentDetails = {}) {
-    return api.post("/orders/create", {
+    return api.post("/orders", {
       amount,
       itemTotal,
       ref,
       paymentMethod,
-      paymentDetails
+      paymentDetails,
     });
   }
   getAllOrders(page) {

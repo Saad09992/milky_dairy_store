@@ -63,20 +63,16 @@ const cartSlice = createSlice({
       })
       .addCase(removeFromCart.fulfilled, (state, action) => {
         state.loading = false;
-        if (typeof action.payload === "string") {
-          // For logged-in users
-          if (state.cartData?.items) {
-            state.cartData = {
-              ...state.cartData,
-              items: state.cartData.items.filter(
-                (item) => item.product_id !== action.payload
-              )
-            };
-          }
-        } else {
-          // For guest users
-          state.cartData = { items: action.payload || [] };
+        if (state.cartData?.items) {
+          // Simply filter out the removed item
+          state.cartData.items = state.cartData.items.filter(
+            (item) => item.product_id !== action.payload
+          );
         }
+        // Update subtotal and total after removing item
+        const items = state.cartData?.items || [];
+        state.cartSubtotal = Array.isArray(items) ? items.reduce((acc, cur) => acc + Number(cur.subtotal || 0), 0) : 0;
+        state.cartTotal = Array.isArray(items) ? items.reduce((acc, cur) => acc + Number(cur.quantity || 0), 0) : 0;
       })
       .addCase(removeFromCart.rejected, (state, action) => {
         state.loading = false;
@@ -89,7 +85,14 @@ const cartSlice = createSlice({
       })
       .addCase(incrementQuantity.fulfilled, (state, action) => {
         state.loading = false;
-        state.cartData = { items: action.payload };
+        if (state.cartData?.items) {
+          // Update quantities while maintaining order
+          const updatedItems = state.cartData.items.map(item => {
+            const updatedItem = action.payload.find(p => p.product_id === item.product_id);
+            return updatedItem || item;
+          });
+          state.cartData.items = updatedItems;
+        }
       })
       .addCase(incrementQuantity.rejected, (state, action) => {
         state.loading = false;
@@ -102,7 +105,14 @@ const cartSlice = createSlice({
       })
       .addCase(decrementQuantity.fulfilled, (state, action) => {
         state.loading = false;
-        state.cartData = { items: action.payload };
+        if (state.cartData?.items) {
+          // Update quantities while maintaining order
+          const updatedItems = state.cartData.items.map(item => {
+            const updatedItem = action.payload.find(p => p.product_id === item.product_id);
+            return updatedItem || item;
+          });
+          state.cartData.items = updatedItems;
+        }
       })
       .addCase(decrementQuantity.rejected, (state, action) => {
         state.loading = false;
@@ -116,12 +126,12 @@ export const selectCartData = (state) => state.cartReducer.cartData;
 export const selectCartSubtotal = (state) => {
   const items = state.cartReducer.cartData?.items || [];
   if (!Array.isArray(items)) return 0;
-  return items.reduce((acc, cur) => acc + Number(cur.subtotal || 0), 0);
+  return Math.ceil(items.reduce((acc, cur) => acc + Number(cur.subtotal || 0), 0));
 };
 export const selectCartTotal = (state) => {
   const items = state.cartReducer.cartData?.items || [];
   if (!Array.isArray(items)) return 0;
-  return items.reduce((acc, cur) => acc + Number(cur.quantity || 0), 0);
+  return Math.ceil(items.reduce((acc, cur) => acc + Number(cur.quantity || 0), 0));
 };
 export const selectCartLoading = (state) => state.cartReducer.loading;
 export const selectCartError = (state) => state.cartReducer.error;

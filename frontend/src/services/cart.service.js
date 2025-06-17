@@ -5,11 +5,11 @@ class CartService {
     return api.get("/cart");
   }
   async addToCart(product_id, quantity) {
-    return await api.post("/cart/add", { product_id, quantity });
+    return await api.post("/cart", { product_id, quantity });
   }
 
   async removeFromCart(product_id) {
-    return await api.delete("/cart/delete", {
+    return await api.delete("/cart", {
       data: { product_id: Number(product_id) },
     });
   }
