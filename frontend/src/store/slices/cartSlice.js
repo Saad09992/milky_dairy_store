@@ -71,8 +71,12 @@ const cartSlice = createSlice({
         }
         // Update subtotal and total after removing item
         const items = state.cartData?.items || [];
-        state.cartSubtotal = Array.isArray(items) ? items.reduce((acc, cur) => acc + Number(cur.subtotal || 0), 0) : 0;
-        state.cartTotal = Array.isArray(items) ? items.reduce((acc, cur) => acc + Number(cur.quantity || 0), 0) : 0;
+        state.cartSubtotal = Array.isArray(items)
+          ? items.reduce((acc, cur) => acc + Number(cur.subtotal || 0), 0)
+          : 0;
+        state.cartTotal = Array.isArray(items)
+          ? items.reduce((acc, cur) => acc + Number(cur.quantity || 0), 0)
+          : 0;
       })
       .addCase(removeFromCart.rejected, (state, action) => {
         state.loading = false;
@@ -87,8 +91,10 @@ const cartSlice = createSlice({
         state.loading = false;
         if (state.cartData?.items) {
           // Update quantities while maintaining order
-          const updatedItems = state.cartData.items.map(item => {
-            const updatedItem = action.payload.find(p => p.product_id === item.product_id);
+          const updatedItems = state.cartData.items.map((item) => {
+            const updatedItem = action.payload.find(
+              (p) => p.product_id === item.product_id
+            );
             return updatedItem || item;
           });
           state.cartData.items = updatedItems;
@@ -107,8 +113,10 @@ const cartSlice = createSlice({
         state.loading = false;
         if (state.cartData?.items) {
           // Update quantities while maintaining order
-          const updatedItems = state.cartData.items.map(item => {
-            const updatedItem = action.payload.find(p => p.product_id === item.product_id);
+          const updatedItems = state.cartData.items.map((item) => {
+            const updatedItem = action.payload.find(
+              (p) => p.product_id === item.product_id
+            );
             return updatedItem || item;
           });
           state.cartData.items = updatedItems;
@@ -126,12 +134,16 @@ export const selectCartData = (state) => state.cartReducer.cartData;
 export const selectCartSubtotal = (state) => {
   const items = state.cartReducer.cartData?.items || [];
   if (!Array.isArray(items)) return 0;
-  return Math.ceil(items.reduce((acc, cur) => acc + Number(cur.subtotal || 0), 0));
+  return Math.ceil(
+    items.reduce((acc, cur) => acc + Number(cur.subtotal || 0), 0)
+  );
 };
 export const selectCartTotal = (state) => {
   const items = state.cartReducer.cartData?.items || [];
   if (!Array.isArray(items)) return 0;
-  return Math.ceil(items.reduce((acc, cur) => acc + Number(cur.quantity || 0), 0));
+  return Math.ceil(
+    items.reduce((acc, cur) => acc + Number(cur.quantity || 0), 0)
+  );
 };
 export const selectCartLoading = (state) => state.cartReducer.loading;
 export const selectCartError = (state) => state.cartReducer.error;

@@ -5,7 +5,7 @@ import { setPage } from "../store/slices/productSlice";
 
 const useOrders = () => {
   const dispatch = useDispatch();
-  const { orders, loading, error, page } = useSelector(
+  const { orders, loading, error, page, currentOrder } = useSelector(
     (state) => state.orderReducer
   );
 
@@ -23,6 +23,7 @@ const useOrders = () => {
     error,
     page,
     setPage: handlePageChange,
+    currentOrder,
   };
 };
 

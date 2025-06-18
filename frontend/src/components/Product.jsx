@@ -58,7 +58,7 @@ const Product = ({ product }) => {
           <div className="relative h-48 bg-gray-50">
             <img
               className="w-full h-full object-contain object-center transform group-hover:scale-105 transition-transform duration-500 ease-out"
-              src={product.image_url}
+              src={`http://localhost:9000/images/${product.image_url}`}
               alt={product.name}
               loading="lazy"
               decoding="async"
@@ -81,18 +81,20 @@ const Product = ({ product }) => {
             {/* Add to Cart Button or Quantity Controls */}
             {cartItem ? (
               <div className="flex items-center justify-between w-full">
-                <Button 
-                  size="small" 
-                  layout="outline" 
+                <Button
+                  size="small"
+                  layout="outline"
                   onClick={handleDecrement}
                   className="hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors duration-200"
                 >
                   -
                 </Button>
-                <span className="mx-2 font-semibold text-gray-700">{cartItem.quantity}</span>
-                <Button 
-                  size="small" 
-                  layout="outline" 
+                <span className="mx-2 font-semibold text-gray-700">
+                  {cartItem.quantity}
+                </span>
+                <Button
+                  size="small"
+                  layout="outline"
                   onClick={handleIncrement}
                   className="hover:bg-green-50 hover:text-green-600 hover:border-green-200 transition-colors duration-200"
                 >

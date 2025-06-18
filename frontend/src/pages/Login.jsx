@@ -84,6 +84,7 @@ const Login = () => {
               className="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
               type="password"
               name="password"
+              placeholder="Enter Password"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.password}
@@ -106,7 +107,9 @@ const Login = () => {
             {loading ? (
               <PulseLoader color={"#0a138b"} size={10} loading />
             ) : (
-              "Login"
+              <div className="bg-blue-500 h-10 w-56 rounded-2xl flex items-center justify-center">
+                <span className="text-white">Login</span>
+              </div>
             )}
           </Button>
           <p className="text-sm mt-4">

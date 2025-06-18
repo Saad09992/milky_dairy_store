@@ -8,14 +8,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { clearCurrentOrder } from "../store/slices/orderSlice";
 import { getOrder } from "../store/methods/orderMethod";
 import { Package, Calendar, DollarSign, ShoppingBag } from "react-feather";
+import useOrders from "../hooks/useOrders";
 
 const OrderDetails = () => {
   const { id } = useParams();
   const { state } = useLocation();
   const dispatch = useDispatch();
-  const { currentOrder: items, loading } = useSelector(
-    (state) => state.orderReducer
-  );
+  const { currentOrder, loading } = useOrders();
 
   useEffect(() => {
     dispatch(getOrder(id));
@@ -26,14 +25,14 @@ const OrderDetails = () => {
 
   const getStatusColor = (status) => {
     switch (status.toLowerCase()) {
-      case 'completed':
-        return 'bg-green-50 text-green-700';
-      case 'pending':
-        return 'bg-yellow-50 text-yellow-700';
-      case 'cancelled':
-        return 'bg-red-50 text-red-700';
+      case "completed":
+        return "bg-green-50 text-green-700";
+      case "pending":
+        return "bg-yellow-50 text-yellow-700";
+      case "cancelled":
+        return "bg-red-50 text-red-700";
       default:
-        return 'bg-blue-50 text-blue-700';
+        return "bg-blue-50 text-blue-700";
     }
   };
 
@@ -43,7 +42,7 @@ const OrderDetails = () => {
         <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
           Order Details
         </h1>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card className="bg-white rounded-xl shadow-sm border border-gray-100">
             <CardBody className="p-6">
@@ -53,7 +52,9 @@ const OrderDetails = () => {
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Order ID</p>
-                  <p className="text-lg font-semibold text-gray-900">#{state.order.order_id}</p>
+                  <p className="text-lg font-semibold text-gray-900">
+                    #{state.order.order_id}
+                  </p>
                 </div>
               </div>
             </CardBody>
@@ -67,7 +68,9 @@ const OrderDetails = () => {
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Items</p>
-                  <p className="text-lg font-semibold text-gray-900">{state.order.total || "Not available"}</p>
+                  <p className="text-lg font-semibold text-gray-900">
+                    {state.order.total || "Not available"}
+                  </p>
                 </div>
               </div>
             </CardBody>
@@ -81,7 +84,9 @@ const OrderDetails = () => {
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Total Amount</p>
-                  <p className="text-lg font-semibold text-gray-900">{formatCurrency(state.order.amount)}</p>
+                  <p className="text-lg font-semibold text-gray-900">
+                    {formatCurrency(state.order.amount)}
+                  </p>
                 </div>
               </div>
             </CardBody>
@@ -95,7 +100,9 @@ const OrderDetails = () => {
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Order Date</p>
-                  <p className="text-lg font-semibold text-gray-900">{format(parseISO(state.order.date), "d MMM, yyyy")}</p>
+                  <p className="text-lg font-semibold text-gray-900">
+                    {format(parseISO(state.order.date), "d MMM, yyyy")}
+                  </p>
                 </div>
               </div>
             </CardBody>
@@ -111,39 +118,49 @@ const OrderDetails = () => {
           </div>
 
           <div className="space-y-6">
-            {items?.map((item) => (
-              <Card
-                key={item.product_id}
-                className="flex flex-col md:flex-row gap-6 p-4 hover:bg-gray-50 transition-colors duration-200"
-              >
-                <div className="w-full md:w-48 h-48 bg-gray-50 rounded-lg overflow-hidden flex-shrink-0">
-                  <img
-                    className="w-full h-full object-contain"
-                    loading="lazy"
-                    decoding="async"
-                    src={item.image_url}
-                    alt={item.name}
-                  />
-                </div>
-                <CardBody className="flex-grow">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{item.name}</h3>
-                  <p className="text-gray-600 mb-4">{item.description}</p>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <span className="text-gray-600">
-                        Quantity: <span className="font-medium text-gray-900">{item.quantity}</span>
-                      </span>
-                      <span className="text-gray-600">
-                        Price: <span className="font-medium text-gray-900">{formatCurrency(item.price)}</span>
-                      </span>
+            {currentOrder.length != 0
+              ? currentOrder?.map((item) => (
+                  <Card
+                    key={item.product_id}
+                    className="flex flex-col md:flex-row gap-6 p-4 hover:bg-gray-50 transition-colors duration-200"
+                  >
+                    <div className="w-full md:w-48 h-48 bg-gray-50 rounded-lg overflow-hidden flex-shrink-0">
+                      <img
+                        className="w-full h-full object-contain"
+                        loading="lazy"
+                        decoding="async"
+                        src={item.image_url}
+                        alt={item.name}
+                      />
                     </div>
-                    <span className="text-lg font-semibold text-gray-900">
-                      {formatCurrency(item.price * item.quantity)}
-                    </span>
-                  </div>
-                </CardBody>
-              </Card>
-            ))}
+                    <CardBody className="flex-grow">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                        {item.name}
+                      </h3>
+                      <p className="text-gray-600 mb-4">{item.description}</p>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          <span className="text-gray-600">
+                            Quantity:{" "}
+                            <span className="font-medium text-gray-900">
+                              {item.quantity}
+                            </span>
+                          </span>
+                          <span className="text-gray-600">
+                            Price:{" "}
+                            <span className="font-medium text-gray-900">
+                              {formatCurrency(item.price)}
+                            </span>
+                          </span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-900">
+                          {formatCurrency(item.price * item.quantity)}
+                        </span>
+                      </div>
+                    </CardBody>
+                  </Card>
+                ))
+              : ""}
           </div>
         </div>
       </div>

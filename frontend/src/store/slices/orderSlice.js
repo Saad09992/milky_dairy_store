@@ -3,10 +3,10 @@ import { getOrders, getOrder, createOrder } from "../methods/orderMethod";
 
 const initialState = {
   orders: null,
-  currentOrder: null,
+  currentOrder: [],
   loading: false,
   error: null,
-  page: 1
+  page: 1,
 };
 
 const orderSlice = createSlice({
@@ -20,8 +20,8 @@ const orderSlice = createSlice({
       state.error = null;
     },
     clearCurrentOrder: (state) => {
-      state.currentOrder = null;
-    }
+      state.currentOrder = [];
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -58,14 +58,14 @@ const orderSlice = createSlice({
       })
       .addCase(createOrder.fulfilled, (state, action) => {
         state.loading = false;
-        state.currentOrder = action.payload;
+        // state.currentOrder = action.payload;
       })
       .addCase(createOrder.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
-  }
+  },
 });
 
 export const { setPage, clearError, clearCurrentOrder } = orderSlice.actions;
-export default orderSlice.reducer; 
+export default orderSlice.reducer;

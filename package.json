@@ -1,0 +1,23 @@
+{
+  "name": "milky_dairy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "concurrently \"cd frontend && npm run dev\" \"cd backend && npm run dev\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Saad09992/milky_dairy_store.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Saad09992/milky_dairy_store/issues"
+  },
+  "homepage": "https://github.com/Saad09992/milky_dairy_store#readme",
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

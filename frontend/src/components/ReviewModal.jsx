@@ -10,12 +10,11 @@ import {
   Textarea,
   Input,
 } from "@windmill/react-ui";
-import { useUser } from "context/UserContext";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import ReactStars from "react-rating-stars-component";
 import { useNavigate } from "react-router-dom";
-import reviewService from "services/review.service";
+import reviewService from "../services/review.service";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import useAuth from "../hooks/useAuth";
@@ -27,22 +26,21 @@ const reviewSchema = Yup.object().shape({
     .min(1, "Rating is required")
     .max(5, "Rating must be between 1 and 5")
     .required("Rating is required"),
-  comment: Yup.string()
-    .min(10, "Comment must be at least 10 characters")
-    .max(500, "Comment must not exceed 500 characters")
-    .required("Comment is required"),
+  content: Yup.string()
+    .min(10, "Review must be at least 10 characters")
+    .max(500, "Review must not exceed 500 characters")
+    .required("Review is required"),
 });
 
 const ReviewModal = ({ isOpen, onClose, productId, review = null }) => {
   const { userData } = useAuth();
   const dispatch = useDispatch();
-  const { reviewExist } = review;
   const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
       rating: review?.rating || 0,
-      comment: review?.comment || "",
+      content: review?.content || "",
     },
     validationSchema: reviewSchema,
     onSubmit: async (values, { setSubmitting }) => {
@@ -79,11 +77,11 @@ const ReviewModal = ({ isOpen, onClose, productId, review = null }) => {
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-        <div className="fixed inset-0 transition-opacity" aria-hidden="true">
+        <div className="fixed inset-0 z-40 transition-opacity" aria-hidden="true">
           <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
         </div>
 
-        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full z-50">
           <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div className="sm:flex sm:items-start">
               <div className="mt-3 text-center sm:mt-0 sm:text-left w-full">
@@ -113,21 +111,21 @@ const ReviewModal = ({ isOpen, onClose, productId, review = null }) => {
                   </div>
 
                   <Label className="block">
-                    <span className="text-gray-900 font-medium">Comment</span>
+                    <span className="text-gray-900 font-medium">Review</span>
                     <Input
                       as="textarea"
-                      name="comment"
+                      name="content"
                       rows={4}
                       placeholder="Share your experience with this product..."
-                      valid={formik.touched.comment && !formik.errors.comment}
-                      error={formik.touched.comment && formik.errors.comment}
+                      valid={formik.touched.content && !formik.errors.content}
+                      error={formik.touched.content && formik.errors.content}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.comment}
+                      value={formik.values.content}
                     />
-                    {formik.touched.comment && formik.errors.comment && (
+                    {formik.touched.content && formik.errors.content && (
                       <HelperText valid={false} className="text-red-600 mt-1">
-                        {formik.errors.comment}
+                        {formik.errors.content}
                       </HelperText>
                     )}
                   </Label>

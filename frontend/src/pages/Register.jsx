@@ -74,7 +74,10 @@ const Register = () => {
   return (
     <RootLayout title="Create account">
       <div className="flex items-center justify-center mx-auto mt-20 ">
-        <form onSubmit={formik.handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col w-full md:w-1/2 mx-2">
+        <form
+          onSubmit={formik.handleSubmit}
+          className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col w-full md:w-1/2 mx-2"
+        >
           <h1 className="text-center text-4xl">Create Account</h1>
           <div className="mt-4">
             <Label className="block text-grey-darker text-sm font-bold mb-2">
@@ -174,7 +177,9 @@ const Register = () => {
             {loading ? (
               <PulseLoader color={"#0a138b"} size={10} loading={loading} />
             ) : (
-              "Create Account"
+              <div className="bg-blue-500 h-10 w-56 rounded-2xl flex items-center justify-center">
+                <span className="text-white">Create Account</span>
+              </div>
             )}
           </Button>
           {error && (

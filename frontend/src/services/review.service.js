@@ -1,31 +1,30 @@
 import api from "../api/baseUrl";
 
-const user_id = JSON.parse(localStorage.getItem("user"))?.user_id;
-
 class ReviewService {
-  getReviews(product_id) {
-    return API.get("/reviews", {
-      params: {
-        product_id,
-        user_id,
-      },
-    });
+  // Get reviews for a specific product
+  getReviews(productId) {
+    return api.get(`/review/${productId}`);
   }
-  addReview(product_id, rating, content) {
-    return API.post("/reviews", {
-      product_id,
-      rating,
-      content,
+
+  // Add a new review for a product
+  addReview(productId, reviewData) {
+    return api.post(`/review/${productId}`, {
+      content: reviewData.content,
+      rating: reviewData.rating,
     });
   }
 
-  updateReview(id, product_id, content, rating) {
-    return API.put("/reviews", {
-      id,
-      content,
-      rating,
-      product_id,
+  // Update an existing review
+  updateReview(reviewId, reviewData) {
+    return api.put(`/review/${reviewId}`, {
+      content: reviewData.content,
+      rating: reviewData.rating,
     });
+  }
+
+  // Delete a review (if needed)
+  deleteReview(reviewId) {
+    return api.delete(`/review/${reviewId}`);
   }
 }
 

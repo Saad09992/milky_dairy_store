@@ -23,8 +23,10 @@ const Checkout = () => {
     }
   }, [cartData, navigate, state]);
 
-  const nextStep = () => setActiveStep((prevStep) => setActiveStep(prevStep + 1));
-  const previousStep = () => setActiveStep((prevStep) => setActiveStep(prevStep - 1));
+  const nextStep = () =>
+    setActiveStep((prevStep) => prevStep + 1);
+  const previousStep = () =>
+    setActiveStep((prevStep) => prevStep - 1);
 
   return (
     <RootLayout>
@@ -32,7 +34,7 @@ const Checkout = () => {
         <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
           Checkout
         </h1>
-        
+
         {activeStep === 0 ? (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
             <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
@@ -40,7 +42,9 @@ const Checkout = () => {
                 <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                   <MapPin className="w-5 h-5 text-blue-600" />
                 </div>
-                <h2 className="text-xl font-semibold text-gray-900">Delivery Address</h2>
+                <h2 className="text-xl font-semibold text-gray-900">
+                  Delivery Address
+                </h2>
               </div>
               <Link
                 to="/profile"
@@ -53,9 +57,13 @@ const Checkout = () => {
 
             <div className="space-y-4">
               <div className="p-4 bg-gray-50 rounded-lg border border-gray-100">
-                <p className="text-gray-900 font-medium">{userData?.fullname}</p>
+                <p className="text-gray-900 font-medium">
+                  {userData?.fullname}
+                </p>
                 <p className="text-gray-600 mt-1">{userData?.address}</p>
-                <p className="text-gray-600">{userData?.city}, {userData?.state} {userData?.zipcode}</p>
+                <p className="text-gray-600">
+                  {userData?.city}, {userData?.state} {userData?.zipcode}
+                </p>
                 <p className="text-gray-600">{userData?.phone}</p>
               </div>
 

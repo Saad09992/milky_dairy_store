@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getProduct } from "../store/methods/productMethod";
 import { clearCurrentProduct } from "../store/slices/productSlice";
 import useAuth from "../hooks/useAuth";
+import ReviewsSection from "../components/ReviewsSection";
 
 const ProductDetails = () => {
   const { slug } = useParams();
@@ -141,6 +142,11 @@ const ProductDetails = () => {
           </div>
         </div>
       </section>
+
+      {/* Reviews Section */}
+      {product?.product_id && (
+        <ReviewsSection productId={product.product_id} />
+      )}
     </RootLayout>
   );
 };
