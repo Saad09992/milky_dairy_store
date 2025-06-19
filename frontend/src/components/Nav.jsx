@@ -9,7 +9,7 @@ import {
 import useCart from "../hooks/useCart";
 import useAuth from "../hooks/useAuth";
 import { useState, useRef, useEffect } from "react";
-import { LogOut, ShoppingCart, User, Search, X } from "react-feather";
+import { LogOut, ShoppingCart, User, Search, X, Settings, Package } from "react-feather";
 import { Link, useNavigate } from "react-router-dom";
 
 const Nav = () => {
@@ -183,6 +183,23 @@ const Nav = () => {
                       </div>
                       <span className="font-medium">Orders</span>
                     </Link>
+
+                    {/* Admin Links */}
+                    {userData?.roles?.includes("admin") && (
+                      <>
+                        <div className="border-t border-gray-100 my-2"></div>
+                        <Link
+                          className="flex items-center w-full px-4 py-2.5 text-sm text-gray-700 hover:text-gray-900 hover:bg-gray-50 transition-all duration-150 ease-out group"
+                          to="/admin/products"
+                          onClick={() => setIsDropdownOpen(false)}
+                        >
+                          <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center mr-3 group-hover:bg-purple-200 transition-colors">
+                            <Package className="w-4 h-4 text-purple-600" />
+                          </div>
+                          <span className="font-medium">Manage Products</span>
+                        </Link>
+                      </>
+                    )}
                   </div>
 
                   <div className="border-t border-gray-100 py-2">

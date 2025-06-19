@@ -8,45 +8,69 @@ const getAllProducts = async (req, res) => {
 };
 
 const createProduct = async (req, res) => {
-  const productData = {
-    ...req.body,
-    image_url: req.file ? req.file.filename : null,
-  };
-  const newProduct = await productService.addProduct(productData);
-  res.status(200).json(newProduct);
+  try {
+    const productData = {
+      ...req.body,
+      image_url: req.file ? req.file.filename : null,
+    };
+    const newProduct = await productService.addProduct(productData);
+    res.status(201).json(newProduct);
+  } catch (error) {
+    res.status(error.statusCode || 500).json({ error: error.message });
+  }
 };
 
 const getProduct = async (req, res) => {
-  const product = await productService.getProductById(req.params);
-  res.status(200).json(product);
+  try {
+    const product = await productService.getProductById(req.params);
+    res.status(200).json(product);
+  } catch (error) {
+    res.status(error.statusCode || 500).json({ error: error.message });
+  }
 };
 
 const getProductBySlug = async (req, res) => {
-  const product = await productService.getProductBySlug(req.params);
-  res.status(200).json(product);
+  try {
+    const product = await productService.getProductBySlug(req.params);
+    res.status(200).json(product);
+  } catch (error) {
+    res.status(error.statusCode || 500).json({ error: error.message });
+  }
 };
 
 const getProductByName = async (req, res) => {
-  const product = await productService.getProductByName(req.params);
-  res.status(200).json(product);
+  try {
+    const product = await productService.getProductByName(req.params);
+    res.status(200).json(product);
+  } catch (error) {
+    res.status(error.statusCode || 500).json({ error: error.message });
+  }
 };
 
 const updateProduct = async (req, res) => {
-  const { id } = req.params;
-  const productData = {
-    ...req.body,
-    image_url: req.file ? req.file.filename : null,
-    id,
-  };
-  const updatedProduct = await productService.updateProduct(productData);
-  res.status(200).json(updatedProduct);
+  try {
+    const { id } = req.params;
+    const productData = {
+      ...req.body,
+      image_url: req.file ? req.file.filename : null,
+      id,
+    };
+    const updatedProduct = await productService.updateProduct(productData);
+    res.status(200).json(updatedProduct);
+  } catch (error) {
+    res.status(error.statusCode || 500).json({ error: error.message });
+  }
 };
 
 const deleteProduct = async (req, res) => {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-  const deletedProduct = await productService.removeProduct(id);
-  res.status(200).json(deletedProduct);
+    const deletedProduct = await productService.removeProduct(id);
+    res.status(200).json(deletedProduct);
+  } catch (error) {
+    res.status(error.statusCode || 500).json({ error: error.message });
+  }
 };
 
 module.exports = {

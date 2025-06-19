@@ -4,6 +4,7 @@ import { Toaster } from "react-hot-toast";
 import { useSelector } from "react-redux";
 import RootLayout from "./layout/RootLayout";
 import Spinner from "./components/Spinner";
+import AdminGuard from "./components/AdminGuard";
 import {
   Account,
   ProductList,
@@ -17,6 +18,9 @@ import {
   ResetPassword,
   NotFound,
   Checkout,
+  AdminProducts,
+  CreateProduct,
+  UpdateProduct,
 } from "./pages";
 import WithAxios from "./helpers/WithAxios";
 
@@ -37,6 +41,32 @@ function App() {
                   <Route path="/cart/success" element={<Confirmation />} />
                   <Route path="/orders" element={<Orders />} />
                   <Route path="/orders/:id/" element={<OrderDetails />} />
+                  
+                  {/* Admin Routes */}
+                  <Route
+                    path="/admin/products"
+                    element={
+                      <AdminGuard>
+                        <AdminProducts />
+                      </AdminGuard>
+                    }
+                  />
+                  <Route
+                    path="/admin/products/create"
+                    element={
+                      <AdminGuard>
+                        <CreateProduct />
+                      </AdminGuard>
+                    }
+                  />
+                  <Route
+                    path="/admin/products/edit/:id"
+                    element={
+                      <AdminGuard>
+                        <UpdateProduct />
+                      </AdminGuard>
+                    }
+                  />
                 </>
               ) : (
                 ""

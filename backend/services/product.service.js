@@ -70,6 +70,7 @@ class ProductService {
       if (!product) {
         throw new ErrorHandler(404, "product not found");
       }
+      return product;
     } catch (error) {
       throw new ErrorHandler(error.statusCode, error.message);
     }

@@ -10,3 +10,8 @@ export { default as ProductDetails } from "./ProductDetails";
 export { default as ProductList } from "./ProductList";
 export { default as Register } from "./Register";
 export { default as ResetPassword } from "./ResetPassword";
+
+// Admin pages
+export { default as AdminProducts } from "./AdminProducts";
+export { default as CreateProduct } from "./CreateProduct";
+export { default as UpdateProduct } from "./UpdateProduct";

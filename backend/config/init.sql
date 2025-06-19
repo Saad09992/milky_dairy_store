@@ -91,6 +91,16 @@ CREATE TABLE public.users
     PRIMARY KEY (user_id)
 );
 
+CREATE TABLE public.product_nutrition
+(
+    PRIMARY KEY (product_id),
+    product_id integer NOT NULL,
+    calories DECIMAL(6,2),
+    protein DECIMAL(6,2),
+    fat DECIMAL(6,2),
+    vitamin character varying(10)[]
+)
+
 
 ALTER TABLE public.cart
     ADD FOREIGN KEY (user_id)
@@ -144,6 +154,12 @@ ALTER TABLE public.reviews
 ALTER TABLE public.reviews
     ADD FOREIGN KEY (user_id)
     REFERENCES public.users (user_id)
+    ON DELETE SET NULL
+    NOT VALID;
+
+ALTER TABLE public.product_nutrition
+    ADD FOREIGN KEY (product_id)
+    REFERENCES public.products (product_id)
     ON DELETE SET NULL
     NOT VALID;
 

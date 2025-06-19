@@ -26,7 +26,6 @@ const createUser = async (req, res) => {
 
 const getUserById = async (req, res) => {
   const { id } = req.params;
-  console.log(id);
   if (+id === req.user.id || req.user.roles.includes("admin")) {
     try {
       const user = await userService.getUserById(id);
