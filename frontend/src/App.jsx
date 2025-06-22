@@ -18,6 +18,7 @@ import {
   ResetPassword,
   NotFound,
   Checkout,
+  Contact,
   AdminProducts,
   CreateProduct,
   UpdateProduct,
@@ -103,6 +104,7 @@ function App() {
 
               <Route path="/signup" element={<Register />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/contact" element={<Contact />} />
               <Route index element={<ProductList />} />
               <Route path="/products/:slug/" element={<ProductDetails />} />
               <Route path="/cart" element={<Cart />} />

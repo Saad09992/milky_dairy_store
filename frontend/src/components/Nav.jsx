@@ -9,7 +9,7 @@ import {
 import useCart from "../hooks/useCart";
 import useAuth from "../hooks/useAuth";
 import { useState, useRef, useEffect } from "react";
-import { LogOut, ShoppingCart, User, Search, X, Settings, Package, MapPin } from "react-feather";
+import { LogOut, ShoppingCart, User, Search, X, Settings, Package, MapPin, Mail } from "react-feather";
 import { Link, useNavigate } from "react-router-dom";
 
 const Nav = () => {
@@ -94,6 +94,14 @@ const Nav = () => {
           <button className="flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium text-gray-700 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all duration-200 ease-out border border-gray-200 hover:border-green-200 hover:shadow-sm active:scale-95 hover:shadow-md">
             <MapPin className="w-4 h-4" />
             <span className="hidden sm:block">Farms</span>
+          </button>
+        </Link>
+
+        {/* Contact Link - Always Visible */}
+        <Link to="/contact">
+          <button className="flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-all duration-200 ease-out border border-gray-200 hover:border-orange-200 hover:shadow-sm active:scale-95 hover:shadow-md">
+            <Mail className="w-4 h-4" />
+            <span className="hidden sm:block">Contact</span>
           </button>
         </Link>
 
