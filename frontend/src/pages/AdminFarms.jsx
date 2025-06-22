@@ -22,6 +22,7 @@ import Spinner from "../components/Spinner";
 const AdminFarms = () => {
   const navigate = useNavigate();
   const [farms, setFarms] = useState([]);
+  const [allFarms, setAllFarms] = useState([]); // Store all farms for filtering
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -34,15 +35,46 @@ const AdminFarms = () => {
 
   useEffect(() => {
     fetchFarms();
-  }, [currentPage, filterType, filterValue]);
+  }, [currentPage]);
+
+  useEffect(() => {
+    // Filter farms based on search query
+    if (searchQuery.trim()) {
+      const filtered = allFarms.filter(farm => {
+        const searchTerm = searchQuery.toLowerCase();
+        return (
+          farm.name?.toLowerCase().includes(searchTerm) ||
+          farm.description?.toLowerCase().includes(searchTerm) ||
+          farm.location?.toLowerCase().includes(searchTerm) ||
+          farm.practices?.toLowerCase().includes(searchTerm) ||
+          farm.contact_email?.toLowerCase().includes(searchTerm) ||
+          farm.contact_phone?.toLowerCase().includes(searchTerm) ||
+          farm.website?.toLowerCase().includes(searchTerm) ||
+          farm.established_year?.toString().includes(searchTerm) ||
+          farm.certifications?.some(cert => cert.toLowerCase().includes(searchTerm))
+        );
+      });
+      setFarms(filtered);
+      setTotalFarms(filtered.length);
+      setTotalPages(1); // Reset pagination for filtered results
+    } else {
+      // Show all farms with pagination
+      const startIndex = (currentPage - 1) * 10; // Assuming 10 items per page
+      const endIndex = startIndex + 10;
+      setFarms(allFarms.slice(startIndex, endIndex));
+      setTotalFarms(allFarms.length);
+      setTotalPages(Math.ceil(allFarms.length / 10));
+    }
+  }, [searchQuery, allFarms, currentPage]);
 
   const fetchFarms = async () => {
     try {
       setLoading(true);
-      const response = await getAllFarms(currentPage);
+      const response = await getAllFarms(1); // Get all farms without pagination
+      setAllFarms(response.farms);
       setFarms(response.farms);
-      setTotalPages(response.pagination.totalPages);
-      setTotalFarms(response.pagination.totalFarms);
+      setTotalPages(1);
+      setTotalFarms(response.farms.length);
     } catch (error) {
       toast.error(error.error || "Failed to fetch farms");
     } finally {
@@ -51,17 +83,14 @@ const AdminFarms = () => {
   };
 
   const handleSearch = () => {
-    if (searchQuery.trim()) {
-      setFilterType("location");
-      setFilterValue(searchQuery.trim());
-      setCurrentPage(1);
-    }
+    // Search is now handled by useEffect
+    setCurrentPage(1); // Reset to first page when searching
   };
 
   const handleClearFilters = () => {
+    setSearchQuery("");
     setFilterType("all");
     setFilterValue("");
-    setSearchQuery("");
     setCurrentPage(1);
   };
 
@@ -80,14 +109,14 @@ const AdminFarms = () => {
       toast.success("Farm deleted successfully");
       setDeleteModalOpen(false);
       setFarmToDelete(null);
-      fetchFarms();
+      fetchFarms(); // Refresh the farms list
     } catch (error) {
       toast.error(error.error || "Failed to delete farm");
     }
   };
 
   const handleViewFarm = (farm) => {
-    navigate(`/admin/farms/${farm.farm_id}`);
+    navigate(`/farms/${farm.farm_id}`);
   };
 
   const formatCertifications = (certifications) => {
@@ -144,7 +173,7 @@ const AdminFarms = () => {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search farms by location..."
+                placeholder="Search farms by name, description, location, practices, contact info..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
@@ -159,7 +188,7 @@ const AdminFarms = () => {
             >
               Search
             </Button>
-            {(filterType !== "all" || searchQuery) && (
+            {searchQuery && (
               <Button
                 onClick={handleClearFilters}
                 className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg transition-colors"
@@ -174,21 +203,21 @@ const AdminFarms = () => {
         <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-blue-50 p-4 rounded-lg">
             <div className="text-2xl font-bold text-blue-600">{totalFarms}</div>
-            <div className="text-sm text-blue-600">Total Farms</div>
-          </div>
-          <div className="bg-green-50 p-4 rounded-lg">
-            <div className="text-2xl font-bold text-green-600">
-              {farms.filter(farm => farm.is_active).length}
+            <div className="text-sm text-blue-600">
+              {searchQuery ? 'Matching Farms' : 'Total Farms'}
             </div>
-            <div className="text-sm text-green-600">Active Farms</div>
-          </div>
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <div className="text-2xl font-bold text-gray-600">
-              {farms.filter(farm => !farm.is_active).length}
-            </div>
-            <div className="text-sm text-gray-600">Inactive Farms</div>
           </div>
         </div>
+
+        {/* Active Filters */}
+        {searchQuery && (
+          <div className="mt-4 flex items-center gap-2">
+            <Filter className="w-4 h-4 text-gray-500" />
+            <span className="text-sm text-gray-600">
+              Searching for: "{searchQuery}"
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Farms Table */}
@@ -197,15 +226,22 @@ const AdminFarms = () => {
           <div className="text-gray-400 mb-4">
             <MapPin className="w-16 h-16 mx-auto" />
           </div>
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">No farms found</h3>
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            {searchQuery ? 'No matching farms found' : 'No farms found'}
+          </h3>
           <p className="text-gray-600 mb-6">
-            Get started by adding your first farm.
+            {searchQuery 
+              ? 'Try adjusting your search terms or clear the search.'
+              : 'Get started by adding your first farm.'
+            }
           </p>
-          <Link to="/admin/farms/create">
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors">
-              Add First Farm
-            </Button>
-          </Link>
+          {!searchQuery && (
+            <Link to="/admin/farms/create">
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors">
+                Add First Farm
+              </Button>
+            </Link>
+          )}
         </div>
       ) : (
         <>
@@ -219,9 +255,6 @@ const AdminFarms = () => {
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Location
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Certifications
@@ -255,14 +288,6 @@ const AdminFarms = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">{farm.location}</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <Badge 
-                          type={farm.is_active ? "success" : "danger"}
-                          className={farm.is_active ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}
-                        >
-                          {farm.is_active ? "Active" : "Inactive"}
-                        </Badge>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex flex-wrap gap-1">

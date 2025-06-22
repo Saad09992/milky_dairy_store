@@ -81,14 +81,6 @@ function App() {
                     }
                   />
                   <Route
-                    path="/admin/farms/:id"
-                    element={
-                      <AdminGuard>
-                        <FarmDetails />
-                      </AdminGuard>
-                    }
-                  />
-                  <Route
                     path="/admin/farms/create"
                     element={
                       <AdminGuard>
@@ -115,6 +107,7 @@ function App() {
               <Route path="/products/:slug/" element={<ProductDetails />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/farms" element={<Farms />} />
+              <Route path="/farms/:id" element={<FarmDetails />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="*" element={<NotFound />}></Route>
             </Routes>

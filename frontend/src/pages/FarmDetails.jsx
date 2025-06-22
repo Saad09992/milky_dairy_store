@@ -109,12 +109,6 @@ const FarmDetails = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
           <div className="absolute bottom-0 left-0 right-0 p-8">
             <div className="flex items-center gap-3 mb-4">
-              <Badge 
-                type={farm.is_active ? "success" : "danger"}
-                className={farm.is_active ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}
-              >
-                {farm.is_active ? "Active" : "Inactive"}
-              </Badge>
               {farm.established_year && (
                 <div className="flex items-center text-white text-sm">
                   <Calendar className="w-4 h-4 mr-2" />
@@ -232,15 +226,6 @@ const FarmDetails = () => {
               <h3 className="text-xl font-semibold text-gray-900">Farm Information</h3>
             </div>
             <div className="space-y-4">
-              <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                <span className="text-gray-600">Status</span>
-                <Badge 
-                  type={farm.is_active ? "success" : "danger"}
-                  className={farm.is_active ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}
-                >
-                  {farm.is_active ? "Active" : "Inactive"}
-                </Badge>
-              </div>
               {farm.established_year && (
                 <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                   <span className="text-gray-600">Established</span>
@@ -265,14 +250,8 @@ const FarmDetails = () => {
             <h3 className="text-xl font-semibold text-gray-900 mb-4">Actions</h3>
             <div className="space-y-3">
               <Button 
-                onClick={() => navigate(`/admin/farms/edit/${farm.farm_id}`)}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-              >
-                Edit Farm
-              </Button>
-              <Button 
                 onClick={() => navigate("/farms")}
-                className="w-full bg-gray-600 hover:bg-gray-700 text-white"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
               >
                 View All Farms
               </Button>
