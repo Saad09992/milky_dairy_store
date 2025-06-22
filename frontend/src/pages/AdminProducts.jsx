@@ -2,7 +2,14 @@ import { useState, useEffect } from "react";
 import { Button, Badge } from "@windmill/react-ui";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import { Plus, Edit, Trash2, Eye, ChevronLeft, ChevronRight } from "react-feather";
+import {
+  Plus,
+  Edit,
+  Trash2,
+  Eye,
+  ChevronLeft,
+  ChevronRight,
+} from "react-feather";
 import productService from "../services/product.service";
 import Spinner from "../components/Spinner";
 
@@ -24,7 +31,7 @@ const AdminProducts = () => {
       const response = await productService.getProducts(currentPage);
       const productsData = response.data || [];
       setProducts(productsData);
-      
+
       // Estimate total pages based on current page and products received
       // If we get a full page, there might be more pages
       if (productsData.length === productsPerPage) {
@@ -85,7 +92,9 @@ const AdminProducts = () => {
       <div className="mb-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Product Management</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Product Management
+            </h1>
             <p className="text-gray-600">Manage your product inventory</p>
           </div>
           <Button
@@ -123,17 +132,16 @@ const AdminProducts = () => {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {products.map((product) => (
-                <tr key={product.product_id} className="hover:bg-gray-50 transition-colors">
+                <tr
+                  key={product.product_id}
+                  className="hover:bg-gray-50 transition-colors"
+                >
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="flex-shrink-0 h-12 w-12">
                         <img
                           className="h-12 w-12 rounded-lg object-cover"
-                          src={
-                            product.image_url
-                              ? `http://localhost:9000/api/uploads/${product.image_url}`
-                              : "https://via.placeholder.com/48x48?text=No+Image"
-                          }
+                          src={`http://localhost:9000/images/${product?.image_url}`}
                           alt={product.name}
                         />
                       </div>
@@ -158,7 +166,9 @@ const AdminProducts = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <span className="text-sm text-gray-900 mr-2">
-                        {product.avg_rating ? parseFloat(product.avg_rating).toFixed(1) : "N/A"}
+                        {product.avg_rating
+                          ? parseFloat(product.avg_rating).toFixed(1)
+                          : "N/A"}
                       </span>
                       {product.avg_rating && (
                         <div className="flex items-center">
@@ -193,7 +203,9 @@ const AdminProducts = () => {
                       <Button
                         size="small"
                         layout="outline"
-                        onClick={() => navigate(`/admin/products/edit/${product.product_id}`)}
+                        onClick={() =>
+                          navigate(`/admin/products/edit/${product.product_id}`)
+                        }
                         title="Edit Product"
                       >
                         <Edit className="w-4 h-4" />
@@ -238,7 +250,9 @@ const AdminProducts = () => {
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No products found</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              No products found
+            </h3>
             <p className="text-gray-500 mb-4">
               Get started by creating your first product.
             </p>
@@ -269,7 +283,7 @@ const AdminProducts = () => {
                   <ChevronLeft className="w-4 h-4" />
                   Previous
                 </Button>
-                
+
                 {/* Page Numbers */}
                 <div className="flex items-center space-x-1">
                   {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
@@ -283,21 +297,25 @@ const AdminProducts = () => {
                     } else {
                       pageNum = currentPage - 2 + i;
                     }
-                    
+
                     return (
                       <Button
                         key={pageNum}
                         size="small"
                         layout={currentPage === pageNum ? "solid" : "outline"}
                         onClick={() => handlePageChange(pageNum)}
-                        className={currentPage === pageNum ? "bg-blue-600 text-white" : ""}
+                        className={
+                          currentPage === pageNum
+                            ? "bg-blue-600 text-white"
+                            : ""
+                        }
                       >
                         {pageNum}
                       </Button>
                     );
                   })}
                 </div>
-                
+
                 <Button
                   size="small"
                   layout="outline"
@@ -316,4 +334,4 @@ const AdminProducts = () => {
   );
 };
 
-export default AdminProducts; 
+export default AdminProducts;

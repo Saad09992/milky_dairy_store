@@ -21,6 +21,11 @@ import {
   AdminProducts,
   CreateProduct,
   UpdateProduct,
+  Farms,
+  AdminFarms,
+  CreateFarm,
+  EditFarm,
+  FarmDetails,
 } from "./pages";
 import WithAxios from "./helpers/WithAxios";
 
@@ -67,6 +72,38 @@ function App() {
                       </AdminGuard>
                     }
                   />
+                  <Route
+                    path="/admin/farms"
+                    element={
+                      <AdminGuard>
+                        <AdminFarms />
+                      </AdminGuard>
+                    }
+                  />
+                  <Route
+                    path="/admin/farms/:id"
+                    element={
+                      <AdminGuard>
+                        <FarmDetails />
+                      </AdminGuard>
+                    }
+                  />
+                  <Route
+                    path="/admin/farms/create"
+                    element={
+                      <AdminGuard>
+                        <CreateFarm />
+                      </AdminGuard>
+                    }
+                  />
+                  <Route
+                    path="/admin/farms/edit/:id"
+                    element={
+                      <AdminGuard>
+                        <EditFarm />
+                      </AdminGuard>
+                    }
+                  />
                 </>
               ) : (
                 ""
@@ -77,6 +114,7 @@ function App() {
               <Route index element={<ProductList />} />
               <Route path="/products/:slug/" element={<ProductDetails />} />
               <Route path="/cart" element={<Cart />} />
+              <Route path="/farms" element={<Farms />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="*" element={<NotFound />}></Route>
             </Routes>

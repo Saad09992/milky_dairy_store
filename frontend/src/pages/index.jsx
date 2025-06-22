@@ -15,3 +15,10 @@ export { default as ResetPassword } from "./ResetPassword";
 export { default as AdminProducts } from "./AdminProducts";
 export { default as CreateProduct } from "./CreateProduct";
 export { default as UpdateProduct } from "./UpdateProduct";
+
+// Farm pages
+export { default as Farms } from "./Farms";
+export { default as AdminFarms } from "./AdminFarms";
+export { default as CreateFarm } from "./CreateFarm";
+export { default as EditFarm } from "./EditFarm";
+export { default as FarmDetails } from "./FarmDetails";

@@ -58,7 +58,7 @@ const Product = ({ product }) => {
           <div className="relative h-48 bg-gray-50">
             <img
               className="w-full h-full object-contain object-center transform group-hover:scale-105 transition-transform duration-500 ease-out"
-              src={`http://localhost:9000/images/${product.image_url}`}
+              src={`http://localhost:9000/images/${product?.image_url}`}
               alt={product.name}
               loading="lazy"
               decoding="async"

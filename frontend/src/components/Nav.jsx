@@ -9,7 +9,7 @@ import {
 import useCart from "../hooks/useCart";
 import useAuth from "../hooks/useAuth";
 import { useState, useRef, useEffect } from "react";
-import { LogOut, ShoppingCart, User, Search, X, Settings, Package } from "react-feather";
+import { LogOut, ShoppingCart, User, Search, X, Settings, Package, MapPin } from "react-feather";
 import { Link, useNavigate } from "react-router-dom";
 
 const Nav = () => {
@@ -89,6 +89,14 @@ const Nav = () => {
       </div>
 
       <div className="flex items-center gap-3 sm:gap-4">
+        {/* Farms Link - Always Visible */}
+        <Link to="/farms">
+          <button className="flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium text-gray-700 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all duration-200 ease-out border border-gray-200 hover:border-green-200 hover:shadow-sm active:scale-95 hover:shadow-md">
+            <MapPin className="w-4 h-4" />
+            <span className="hidden sm:block">Farms</span>
+          </button>
+        </Link>
+
         {!loggedIn ? (
           <>
             <Link to="/login">
@@ -197,6 +205,16 @@ const Nav = () => {
                             <Package className="w-4 h-4 text-purple-600" />
                           </div>
                           <span className="font-medium">Manage Products</span>
+                        </Link>
+                        <Link
+                          className="flex items-center w-full px-4 py-2.5 text-sm text-gray-700 hover:text-gray-900 hover:bg-gray-50 transition-all duration-150 ease-out group"
+                          to="/admin/farms"
+                          onClick={() => setIsDropdownOpen(false)}
+                        >
+                          <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3 group-hover:bg-green-200 transition-colors">
+                            <MapPin className="w-4 h-4 text-green-600" />
+                          </div>
+                          <span className="font-medium">Manage Farms</span>
                         </Link>
                       </>
                     )}

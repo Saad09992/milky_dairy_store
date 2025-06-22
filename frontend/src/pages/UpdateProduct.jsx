@@ -32,8 +32,8 @@ const UpdateProduct = () => {
       // First get the product list to find the product by ID and get its slug
       const productsResponse = await productService.getProducts(1);
       const products = productsResponse.data || [];
-      const product = products.find(p => p.product_id === parseInt(id));
-      
+      const product = products.find((p) => p.product_id === parseInt(id));
+
       if (!product) {
         toast.error("Product not found");
         navigate("/admin/products");
@@ -43,7 +43,7 @@ const UpdateProduct = () => {
       // Now fetch the full product data using the slug
       const response = await productService.getProductByName(product.slug);
       const productData = response.data;
-      
+
       setFormData({
         name: productData.name || "",
         description: productData.description || "",
@@ -52,11 +52,13 @@ const UpdateProduct = () => {
         calories: productData.nutrition?.calories || "",
         protein: productData.nutrition?.protein || "",
         fat: productData.nutrition?.fat || "",
-        vitamin: productData.nutrition?.vitamin ? productData.nutrition.vitamin.join(", ") : "",
+        vitamin: productData.nutrition?.vitamin
+          ? productData.nutrition.vitamin.join(", ")
+          : "",
       });
 
-      if (productData.image_url) {
-        setImagePreview(`http://localhost:9000/api/uploads/${productData.image_url}`);
+      if (productData?.image_url) {
+        setImagePreview(`http://localhost:9000/images/${product?.image_url}`);
       }
     } catch (error) {
       toast.error("Failed to fetch product details");
@@ -81,7 +83,7 @@ const UpdateProduct = () => {
         ...prev,
         image: file,
       }));
-      
+
       // Create preview
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -103,9 +105,10 @@ const UpdateProduct = () => {
       if (formData.image) {
         formDataToSend.append("image", formData.image);
       }
-      
+
       // Add nutrition data if provided
-      if (formData.calories) formDataToSend.append("calories", formData.calories);
+      if (formData.calories)
+        formDataToSend.append("calories", formData.calories);
       if (formData.protein) formDataToSend.append("protein", formData.protein);
       if (formData.fat) formDataToSend.append("fat", formData.fat);
       if (formData.vitamin) formDataToSend.append("vitamin", formData.vitamin);
@@ -160,8 +163,12 @@ const UpdateProduct = () => {
         </div>
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Update Product</h1>
-            <p className="text-gray-600">Edit product information and details</p>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Update Product
+            </h1>
+            <p className="text-gray-600">
+              Edit product information and details
+            </p>
           </div>
           <Button
             onClick={handleDelete}
@@ -230,7 +237,9 @@ const UpdateProduct = () => {
 
           {/* Nutrition Information */}
           <div>
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Nutrition Information (Optional)</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-4">
+              Nutrition Information (Optional)
+            </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -314,9 +323,12 @@ const UpdateProduct = () => {
                       <Upload className="w-8 h-8 mb-4 text-gray-500" />
                     )}
                     <p className="mb-2 text-sm text-gray-500">
-                      <span className="font-semibold">Click to upload</span> or drag and drop
+                      <span className="font-semibold">Click to upload</span> or
+                      drag and drop
                     </p>
-                    <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                    <p className="text-xs text-gray-500">
+                      PNG, JPG, GIF up to 10MB
+                    </p>
                   </div>
                   <input
                     type="file"
@@ -364,4 +376,4 @@ const UpdateProduct = () => {
   );
 };
 
-export default UpdateProduct; 
+export default UpdateProduct;

@@ -17,7 +17,7 @@ const CartItem = ({ item }) => {
       <TableCell className="py-4">
         <div className="flex items-center">
           <img
-            src={item.image_url}
+            src={`http://localhost:9000/images/${item?.image_url}`}
             alt={item.name}
             className="w-12 h-12 object-contain rounded-lg bg-gray-50 mr-3"
           />
@@ -25,7 +25,9 @@ const CartItem = ({ item }) => {
         </div>
       </TableCell>
       <TableCell className="py-4">
-        <span className="font-semibold text-gray-900">{formatCurrency(item.price)}</span>
+        <span className="font-semibold text-gray-900">
+          {formatCurrency(item.price)}
+        </span>
       </TableCell>
       <TableCell className="py-4">
         <div className="flex items-center">
@@ -38,10 +40,12 @@ const CartItem = ({ item }) => {
           >
             -
           </Button>
-          <span className="mx-3 font-semibold text-gray-700">{item.quantity}</span>
-          <Button 
-            size="small" 
-            layout="outline" 
+          <span className="mx-3 font-semibold text-gray-700">
+            {item.quantity}
+          </span>
+          <Button
+            size="small"
+            layout="outline"
             onClick={() => increase()}
             className="hover:bg-green-50 hover:text-green-600 hover:border-green-200 transition-colors duration-200"
           >
@@ -50,11 +54,13 @@ const CartItem = ({ item }) => {
         </div>
       </TableCell>
       <TableCell className="py-4">
-        <span className="font-bold text-gray-900">{formatCurrency(item.subtotal)}</span>
+        <span className="font-bold text-gray-900">
+          {formatCurrency(item.subtotal)}
+        </span>
       </TableCell>
       <TableCell className="py-4">
-        <Button 
-          layout="Link" 
+        <Button
+          layout="Link"
           onClick={() => deleteItem(item.product_id)}
           className="text-gray-400 hover:text-red-600 transition-colors duration-200"
         >

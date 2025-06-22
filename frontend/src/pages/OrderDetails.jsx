@@ -129,7 +129,7 @@ const OrderDetails = () => {
                         className="w-full h-full object-contain"
                         loading="lazy"
                         decoding="async"
-                        src={item.image_url}
+                        src={`http://localhost:9000/images/${item?.image_url}`}
                         alt={item.name}
                       />
                     </div>

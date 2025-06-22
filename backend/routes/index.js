@@ -7,6 +7,7 @@ const auth = require("./auth");
 const payment = require("./payment");
 const review = require("./review");
 const nutrition = require("./nutrition");
+const farm = require("./farm");
 
 router.use("/auth", auth);
 router.use("/users", users);
@@ -16,5 +17,6 @@ router.use("/cart", cart);
 router.use("/payment", payment);
 router.use("/review", review);
 router.use("/nutrition", nutrition);
+router.use("/farms", farm);
 
 module.exports = router;

@@ -4,15 +4,30 @@ import Spinner from "../components/Spinner";
 import useProduct from "../hooks/useProduct";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { ChevronLeft, ChevronRight } from "react-feather";
 
 const ProductList = () => {
   const { products, loading, page, setPage } = useProduct();
   const [sortBy, setSortBy] = useState("default");
+  const [totalPages, setTotalPages] = useState(1);
+  const [productsPerPage] = useState(12);
   const location = useLocation();
   const searchQuery = location.state?.searchQuery || "";
 
-  const handleChange = (page) => {
-    setPage(page);
+  // Update total pages when products change
+  useEffect(() => {
+    if (Array.isArray(products)) {
+      // If we get a full page, there might be more pages
+      if (products.length === productsPerPage) {
+        setTotalPages(page + 1);
+      } else {
+        setTotalPages(page);
+      }
+    }
+  }, [products, page, productsPerPage]);
+
+  const handleChange = (newPage) => {
+    setPage(newPage);
     window.scrollTo({ behavior: "smooth", top: 0 });
   };
 
@@ -20,6 +35,7 @@ const ProductList = () => {
     setSortBy(e.target.value);
   };
 
+  // Client-side filtering and sorting
   let filteredProducts = [];
   if (Array.isArray(products)) {
     filteredProducts = products.filter((prod) =>
@@ -45,7 +61,10 @@ const ProductList = () => {
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-8">
       {/* Filter Section */}
-      <div className="mb-8 flex flex-col sm:flex-row gap-4 items-center justify-end">
+      <div className="mb-8 flex flex-col sm:flex-row gap-4 items-center justify-between">
+        <div className="text-sm text-gray-600">
+          Page {page} of {totalPages}
+        </div>
         <div className="w-full sm:w-48">
           <Select value={sortBy} onChange={handleSort}>
             <option value="default">Sort by: Default</option>
@@ -78,7 +97,7 @@ const ProductList = () => {
       )}
 
       {/* Pagination */}
-      {filteredProducts.length > 12 && (
+      {totalPages > 1 && (
         <div className="flex justify-center mt-12">
           <div className="flex items-center space-x-2">
             <Button
@@ -86,17 +105,45 @@ const ProductList = () => {
               onClick={() => handleChange(page - 1)}
               disabled={page === 1}
             >
+              <ChevronLeft className="w-4 h-4 mr-1" />
               Previous
             </Button>
-            <span className="px-4 py-2 bg-gray-100 rounded-lg">
-              Page {page} of {Math.ceil(filteredProducts.length / 12)}
-            </span>
+            
+            {/* Page Numbers */}
+            <div className="flex items-center space-x-1">
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                let pageNum;
+                if (totalPages <= 5) {
+                  pageNum = i + 1;
+                } else if (page <= 3) {
+                  pageNum = i + 1;
+                } else if (page >= totalPages - 2) {
+                  pageNum = totalPages - 4 + i;
+                } else {
+                  pageNum = page - 2 + i;
+                }
+                
+                return (
+                  <Button
+                    key={pageNum}
+                    size="small"
+                    layout={page === pageNum ? "solid" : "outline"}
+                    onClick={() => handleChange(pageNum)}
+                    className={page === pageNum ? "bg-blue-600 text-white" : ""}
+                  >
+                    {pageNum}
+                  </Button>
+                );
+              })}
+            </div>
+            
             <Button
               layout="outline"
               onClick={() => handleChange(page + 1)}
-              disabled={page >= Math.ceil(filteredProducts.length / 12)}
+              disabled={page >= totalPages}
             >
               Next
+              <ChevronRight className="w-4 h-4 ml-1" />
             </Button>
           </div>
         </div>
