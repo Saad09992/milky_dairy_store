@@ -21,6 +21,11 @@ CREATE TABLE public.order_item
     order_id integer NOT NULL,
     product_id integer NOT NULL,
     quantity integer NOT NULL,
+    price_at_time DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    discounted_price_at_time DECIMAL(10,2),
+    is_on_sale_at_time BOOLEAN DEFAULT false,
+    discount_percentage_at_time DECIMAL(5,2) DEFAULT 0.00,
+    subtotal DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     PRIMARY KEY (id)
 );
 
@@ -50,6 +55,11 @@ CREATE TABLE public.products
     price real NOT NULL,
     description text NOT NULL,
     image_url character varying,
+    discount_percentage DECIMAL(5,2) DEFAULT 0.00,
+    is_on_sale BOOLEAN DEFAULT false,
+    sale_start_date timestamp without time zone,
+    sale_end_date timestamp without time zone,
+    discounted_price DECIMAL(10,2),
     PRIMARY KEY (product_id)
 );
 

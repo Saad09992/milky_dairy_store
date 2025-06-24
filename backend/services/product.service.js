@@ -7,6 +7,7 @@ const {
   deleteProductDb,
   getProductByNameDb,
   getProductBySlugDb,
+  getProductsOnSaleDb,
 } = require("../db/product.db");
 const { ErrorHandler } = require("../helpers/error");
 
@@ -16,6 +17,16 @@ class ProductService {
     const offset = (page - 1) * limit;
     try {
       return await getAllProductsDb({ limit, offset });
+    } catch (error) {
+      throw new ErrorHandler(error.statusCode, error.message);
+    }
+  };
+
+  getProductsOnSale = async (page) => {
+    const limit = 12;
+    const offset = (page - 1) * limit;
+    try {
+      return await getProductsOnSaleDb({ limit, offset });
     } catch (error) {
       throw new ErrorHandler(error.statusCode, error.message);
     }
@@ -32,6 +43,10 @@ class ProductService {
       const body = {
         ...data,
         slug: slug,
+        discount_percentage: data.discount_percentage || 0.00,
+        is_on_sale: data.is_on_sale || false,
+        sale_start_date: data.sale_start_date || null,
+        sale_end_date: data.sale_end_date || null,
       };
 
       return await createProductDb(body);
@@ -90,6 +105,10 @@ class ProductService {
       const body = {
         ...data,
         slug: slug,
+        discount_percentage: data.discount_percentage || 0.00,
+        is_on_sale: data.is_on_sale || false,
+        sale_start_date: data.sale_start_date || null,
+        sale_end_date: data.sale_end_date || null,
       };
       return await updateProductDb(body);
     } catch (error) {

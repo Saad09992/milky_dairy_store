@@ -7,6 +7,7 @@ const {
   deleteProduct,
   getProductByName,
   getProductBySlug,
+  getProductsOnSale,
 } = require("../controllers/products.controller");
 const verifyAdmin = require("../middleware/verifyAdmin");
 const verifyToken = require("../middleware/verifyToken");
@@ -21,6 +22,8 @@ router
   .route("/")
   .get(getAllProducts)
   .post(verifyToken, verifyAdmin, upload.single("image"), createProduct);
+
+router.route("/sale").get(getProductsOnSale);
 
 router.route("/:slug").get(getProductBySlug);
 

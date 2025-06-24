@@ -19,13 +19,17 @@ const CreateProduct = () => {
     protein: "",
     fat: "",
     vitamin: "",
+    discount_percentage: "",
+    is_on_sale: false,
+    sale_start_date: "",
+    sale_end_date: "",
   });
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
@@ -64,6 +68,12 @@ const CreateProduct = () => {
       if (formData.protein) formDataToSend.append("protein", formData.protein);
       if (formData.fat) formDataToSend.append("fat", formData.fat);
       if (formData.vitamin) formDataToSend.append("vitamin", formData.vitamin);
+
+      // Add discount data
+      formDataToSend.append("discount_percentage", formData.discount_percentage || "0");
+      formDataToSend.append("is_on_sale", formData.is_on_sale);
+      if (formData.sale_start_date) formDataToSend.append("sale_start_date", formData.sale_start_date);
+      if (formData.sale_end_date) formDataToSend.append("sale_end_date", formData.sale_end_date);
 
       await productService.createProduct(formDataToSend);
       toast.success("Product created successfully!");
@@ -210,6 +220,83 @@ const CreateProduct = () => {
                   className="w-full"
                 />
               </div>
+            </div>
+          </div>
+
+          {/* Discount Information */}
+          <div>
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Discount Information (Optional)</h3>
+            <div className="space-y-4">
+              {/* Sale Toggle */}
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  name="is_on_sale"
+                  checked={formData.is_on_sale}
+                  onChange={handleInputChange}
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                />
+                <label className="ml-2 block text-sm text-gray-900">
+                  This product is on sale
+                </label>
+              </div>
+
+              {/* Discount Fields - Only show if on sale */}
+              {formData.is_on_sale && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Discount Percentage (%)
+                    </label>
+                    <Input
+                      type="number"
+                      name="discount_percentage"
+                      value={formData.discount_percentage}
+                      onChange={handleInputChange}
+                      placeholder="0"
+                      step="0.01"
+                      min="0"
+                      max="100"
+                      className="w-full"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Sale Start Date
+                    </label>
+                    <Input
+                      type="datetime-local"
+                      name="sale_start_date"
+                      value={formData.sale_start_date}
+                      onChange={handleInputChange}
+                      className="w-full"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Sale End Date
+                    </label>
+                    <Input
+                      type="datetime-local"
+                      name="sale_end_date"
+                      value={formData.sale_end_date}
+                      onChange={handleInputChange}
+                      className="w-full"
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <p className="text-sm text-blue-800">
+                        <strong>Note:</strong> Leave sale dates empty to make the sale always active. 
+                        Discount percentage should be between 0 and 100.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 

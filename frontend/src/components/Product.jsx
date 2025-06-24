@@ -50,6 +50,10 @@ const Product = ({ product }) => {
     }
   };
 
+  // Check if product is on sale and has a discounted price
+  const isOnSale = product.is_on_sale && product.discount_percentage > 0 && product.discounted_price;
+  const displayPrice = isOnSale ? product.discounted_price : product.price;
+
   return (
     <div className="w-full group">
       <Link to={`/products/${product.slug}`} className="block">
@@ -65,6 +69,13 @@ const Product = ({ product }) => {
               title={product.name}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            
+            {/* Sale Badge */}
+            {isOnSale && (
+              <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">
+                {product.discount_percentage}% OFF
+              </div>
+            )}
           </div>
 
           {/* Product Info */}
@@ -74,9 +85,22 @@ const Product = ({ product }) => {
             </h2>
 
             {/* Price */}
-            <p className="text-xl font-semibold text-gray-900 mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              {formatCurrency(product.price)}
-            </p>
+            <div className="mb-4">
+              {isOnSale ? (
+                <div className="flex items-center gap-2">
+                  <p className="text-xl font-semibold text-red-600">
+                    {formatCurrency(displayPrice)}
+                  </p>
+                  <p className="text-sm text-gray-500 line-through">
+                    {formatCurrency(product.price)}
+                  </p>
+                </div>
+              ) : (
+                <p className="text-xl font-semibold text-gray-900 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  {formatCurrency(displayPrice)}
+                </p>
+              )}
+            </div>
 
             {/* Add to Cart Button or Quantity Controls */}
             {cartItem ? (
@@ -114,7 +138,11 @@ const Product = ({ product }) => {
                     <ShoppingCart className="mr-2" size={18} />
                   )
                 }
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-sm hover:shadow-md active:scale-95"
+                className={`w-full transition-all duration-200 shadow-sm hover:shadow-md active:scale-95 ${
+                  isOnSale 
+                    ? "bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700"
+                    : "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700"
+                }`}
                 onClick={addToCart}
                 disabled={isLoading}
               >

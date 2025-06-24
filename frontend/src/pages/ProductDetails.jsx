@@ -12,7 +12,7 @@ import { getProduct } from "../store/methods/productMethod";
 import { clearCurrentProduct } from "../store/slices/productSlice";
 import useAuth from "../hooks/useAuth";
 import ReviewsSection from "../components/ReviewsSection";
-import { Activity, Zap, Droplet } from "react-feather";
+import { Activity, Zap, Droplet, Tag } from "react-feather";
 
 const ProductDetails = () => {
   const { slug } = useParams();
@@ -32,6 +32,10 @@ const ProductDetails = () => {
   const cartItem = items.find(
     (item) => item.product_id === product?.product_id
   );
+
+  // Check if product is on sale and has a discounted price
+  const isOnSale = product?.is_on_sale && product?.discount_percentage > 0 && product?.discounted_price;
+  const displayPrice = isOnSale ? product.discounted_price : product?.price;
 
   const addToCart = async (e) => {
     e.preventDefault();
@@ -229,13 +233,22 @@ const ProductDetails = () => {
       <section className="body-font overflow-hidden">
         <div className="container px-5 py-24 mx-auto">
           <div className="lg:w-4/5 mx-auto flex flex-wrap">
-            <img
-              decoding="async"
-              loading="lazy"
-              src={`http://localhost:9000/images/${product?.image_url}`}
-              alt={product?.name}
-              className="lg:w-1/2 w-full lg:h-auto h-64 object-contain md:object-cover object-center rounded"
-            />
+            <div className="lg:w-1/2 w-full lg:h-auto h-64 relative">
+              <img
+                decoding="async"
+                loading="lazy"
+                src={`http://localhost:9000/images/${product?.image_url}`}
+                alt={product?.name}
+                className="w-full h-full object-contain md:object-cover object-center rounded"
+              />
+              {/* Sale Badge */}
+              {isOnSale && (
+                <div className="absolute top-4 left-4 bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-full shadow-lg">
+                  <Tag className="w-4 h-4 inline mr-1" />
+                  {product.discount_percentage}% OFF
+                </div>
+              )}
+            </div>
             <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
               <h1 className="text-3xl title-font font-medium mb-1">
                 {product?.name}
@@ -244,10 +257,28 @@ const ProductDetails = () => {
               <p className="leading-relaxed pb-6 border-b-2 border-gray-800">
                 {product?.description}
               </p>
-              <div className="flex mt-4 justify-between">
-                <span className="title-font font-medium text-2xl">
-                  {formatCurrency(product?.price)}
-                </span>
+              <div className="flex mt-4 justify-between items-center">
+                <div className="flex flex-col">
+                  {/* Price Display */}
+                  {isOnSale ? (
+                    <div className="flex items-center gap-3">
+                      <span className="title-font font-medium text-2xl text-red-600">
+                        {formatCurrency(displayPrice)}
+                      </span>
+                      <span className="title-font font-medium text-lg text-gray-500 line-through">
+                        {formatCurrency(product?.price)}
+                      </span>
+                      <Badge type="success" className="bg-red-100 text-red-800">
+                        Save {formatCurrency(product?.price - displayPrice)}
+                      </Badge>
+                    </div>
+                  ) : (
+                    <span className="title-font font-medium text-2xl">
+                      {formatCurrency(displayPrice)}
+                    </span>
+                  )}
+                </div>
+                
                 {cartItem ? (
                   <div className="flex items-center">
                     <Button
@@ -270,15 +301,18 @@ const ProductDetails = () => {
                   </div>
                 ) : (
                   <Button
-                    // className="border-0 focus:outline-none rounded"
-                    className=" bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-sm hover:shadow-md active:scale-95"
+                    className={`transition-all duration-200 shadow-sm hover:shadow-md active:scale-95 ${
+                      isOnSale 
+                        ? "bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700"
+                        : "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700"
+                    }`}
                     onClick={(e) => addToCart(e)}
                     disabled={isLoading}
                   >
                     {isLoading ? (
                       <ClipLoader
                         cssOverride={{ margin: "0 auto" }}
-                        color="#123abc"
+                        color="#ffffff"
                         size={20}
                       />
                     ) : (

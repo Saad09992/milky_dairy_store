@@ -9,9 +9,13 @@ import {
   Eye,
   ChevronLeft,
   ChevronRight,
+  Bell,
+  Tag,
 } from "react-feather";
 import productService from "../services/product.service";
 import Spinner from "../components/Spinner";
+import SaleNotification from "../components/SaleNotification";
+import { formatCurrency } from "../helpers/formatCurrency";
 
 const AdminProducts = () => {
   const navigate = useNavigate();
@@ -21,6 +25,7 @@ const AdminProducts = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [productsPerPage] = useState(12);
+  const [showNotificationModal, setShowNotificationModal] = useState(false);
 
   useEffect(() => {
     fetchProducts();
@@ -61,6 +66,10 @@ const AdminProducts = () => {
     }
   };
 
+  const handleSendDiscountNotifications = async () => {
+    setShowNotificationModal(true);
+  };
+
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
     setLoading(true);
@@ -97,13 +106,22 @@ const AdminProducts = () => {
             </h1>
             <p className="text-gray-600">Manage your product inventory</p>
           </div>
-          <Button
-            onClick={() => navigate("/admin/products/create")}
-            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Add New Product
-          </Button>
+          <div className="flex gap-3">
+            <Button
+              onClick={handleSendDiscountNotifications}
+              className="bg-green-600 hover:bg-green-700 text-white"
+            >
+              <Bell className="w-4 h-4 mr-2" />
+              Notify Users
+            </Button>
+            <Button
+              onClick={() => navigate("/admin/products/create")}
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add New Product
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -118,6 +136,9 @@ const AdminProducts = () => {
                 </th>
                 <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Price
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Discount
                 </th>
                 <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Nutrition
@@ -156,7 +177,24 @@ const AdminProducts = () => {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    ${parseFloat(product.price).toFixed(2)}
+                    {formatCurrency(product.price)}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {product.is_on_sale && product.discount_percentage > 0 ? (
+                      <div className="flex items-center gap-2">
+                        <Badge type="success" className="bg-red-100 text-red-800">
+                          <Tag className="w-3 h-3 mr-1" />
+                          {product.discount_percentage}% OFF
+                        </Badge>
+                        {product.discounted_price && (
+                          <span className="text-sm text-gray-600">
+                            {formatCurrency(product.discounted_price)}
+                          </span>
+                        )}
+                      </div>
+                    ) : (
+                      <span className="text-sm text-gray-500">No discount</span>
+                    )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900">
@@ -330,6 +368,11 @@ const AdminProducts = () => {
           </div>
         )}
       </div>
+      
+      {/* Sale Notification Modal */}
+      {showNotificationModal && (
+        <SaleNotification onClose={() => setShowNotificationModal(false)} />
+      )}
     </div>
   );
 };

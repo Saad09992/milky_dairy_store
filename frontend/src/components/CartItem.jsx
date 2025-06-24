@@ -1,10 +1,26 @@
-import { Button, TableCell } from "@windmill/react-ui";
+import { Button, TableCell, Badge } from "@windmill/react-ui";
 import useCart from "../hooks/useCart";
 import { formatCurrency } from "../helpers/formatCurrency";
-import { Trash2 } from "react-feather";
+import { Trash2, Tag } from "react-feather";
 
 const CartItem = ({ item }) => {
   const { decrement, increment, deleteItem } = useCart();
+
+  // Check if item is on sale and has a discounted price
+  const isOnSale = item?.is_on_sale && item?.discount_percentage > 0 && item?.discounted_price;
+  const displayPrice = isOnSale ? item.discounted_price : item.price;
+  const subtotal = displayPrice * item.quantity;
+
+  // Debug logging
+  // console.log('CartItem data:', {
+  //   name: item?.name,
+  //   price: item?.price,
+  //   discounted_price: item?.discounted_price,
+  //   is_on_sale: item?.is_on_sale,
+  //   discount_percentage: item?.discount_percentage,
+  //   isOnSale,
+  //   displayPrice
+  // });
 
   const increase = () => {
     increment(item.product_id);
@@ -16,18 +32,46 @@ const CartItem = ({ item }) => {
     <>
       <TableCell className="py-4">
         <div className="flex items-center">
-          <img
-            src={`http://localhost:9000/images/${item?.image_url}`}
-            alt={item.name}
-            className="w-12 h-12 object-contain rounded-lg bg-gray-50 mr-3"
-          />
-          <span className="font-medium text-gray-900">{item.name}</span>
+          <div className="relative">
+            <img
+              src={`http://localhost:9000/images/${item?.image_url}`}
+              alt={item.name}
+              className="w-12 h-12 object-contain rounded-lg bg-gray-50 mr-3"
+            />
+            {/* Sale Badge */}
+            {isOnSale && (
+              <div className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold px-1 py-0.5 rounded-full">
+                <Tag className="w-2 h-2" />
+              </div>
+            )}
+          </div>
+          <div className="flex flex-col">
+            <span className="font-medium text-gray-900">{item.name}</span>
+            {isOnSale && (
+              <Badge type="success" className="bg-red-100 text-red-800 text-xs w-fit">
+                {item.discount_percentage}% OFF
+              </Badge>
+            )}
+          </div>
         </div>
       </TableCell>
       <TableCell className="py-4">
-        <span className="font-semibold text-gray-900">
-          {formatCurrency(item.price)}
-        </span>
+        <div className="flex flex-col">
+          {isOnSale ? (
+            <>
+              <span className="font-semibold text-red-600">
+                {formatCurrency(displayPrice)}
+              </span>
+              <span className="text-sm text-gray-500 line-through">
+                {formatCurrency(item.price)}
+              </span>
+            </>
+          ) : (
+            <span className="font-semibold text-gray-900">
+              {formatCurrency(displayPrice)}
+            </span>
+          )}
+        </div>
       </TableCell>
       <TableCell className="py-4">
         <div className="flex items-center">
@@ -54,9 +98,22 @@ const CartItem = ({ item }) => {
         </div>
       </TableCell>
       <TableCell className="py-4">
-        <span className="font-bold text-gray-900">
-          {formatCurrency(item.subtotal)}
-        </span>
+        <div className="flex flex-col">
+          {isOnSale ? (
+            <>
+              <span className="font-bold text-red-600">
+                {formatCurrency(subtotal)}
+              </span>
+              <span className="text-sm text-gray-500 line-through">
+                {formatCurrency(item.price * item.quantity)}
+              </span>
+            </>
+          ) : (
+            <span className="font-bold text-gray-900">
+              {formatCurrency(subtotal)}
+            </span>
+          )}
+        </div>
       </TableCell>
       <TableCell className="py-4">
         <Button

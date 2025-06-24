@@ -3,6 +3,11 @@ class ProductService {
   getProducts(page) {
     return api.get(`/products/?page=${page}`);
   }
+  
+  getProductsOnSale(page) {
+    return api.get(`/products/sale?page=${page}`);
+  }
+  
   getProduct(id) {
     return api.get(`/products/${id}`);
   }
@@ -29,6 +34,15 @@ class ProductService {
   
   deleteProduct(id) {
     return api.delete(`/products/${id}`);
+  }
+
+  // Notification methods
+  sendDiscountNotificationsToAll() {
+    return api.post("/notifications/discount/all");
+  }
+
+  sendDiscountNotificationToUser(userId) {
+    return api.post(`/notifications/discount/user/${userId}`);
   }
 }
 

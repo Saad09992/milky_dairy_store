@@ -21,6 +21,10 @@ const UpdateProduct = () => {
     protein: "",
     fat: "",
     vitamin: "",
+    discount_percentage: "",
+    is_on_sale: false,
+    sale_start_date: "",
+    sale_end_date: "",
   });
 
   useEffect(() => {
@@ -55,10 +59,14 @@ const UpdateProduct = () => {
         vitamin: productData.nutrition?.vitamin
           ? productData.nutrition.vitamin.join(", ")
           : "",
+        discount_percentage: productData.discount_percentage || "",
+        is_on_sale: productData.is_on_sale || false,
+        sale_start_date: productData.sale_start_date || "",
+        sale_end_date: productData.sale_end_date || "",
       });
 
       if (productData?.image_url) {
-        setImagePreview(`http://localhost:9000/images/${product?.image_url}`);
+        setImagePreview(`http://localhost:9000/images/${productData.image_url}`);
       }
     } catch (error) {
       toast.error("Failed to fetch product details");
@@ -69,10 +77,10 @@ const UpdateProduct = () => {
   };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
@@ -112,6 +120,12 @@ const UpdateProduct = () => {
       if (formData.protein) formDataToSend.append("protein", formData.protein);
       if (formData.fat) formDataToSend.append("fat", formData.fat);
       if (formData.vitamin) formDataToSend.append("vitamin", formData.vitamin);
+
+      // Add discount data
+      formDataToSend.append("discount_percentage", formData.discount_percentage || "0");
+      formDataToSend.append("is_on_sale", formData.is_on_sale);
+      if (formData.sale_start_date) formDataToSend.append("sale_start_date", formData.sale_start_date);
+      if (formData.sale_end_date) formDataToSend.append("sale_end_date", formData.sale_end_date);
 
       await productService.updateProduct(id, formDataToSend);
       toast.success("Product updated successfully!");
@@ -304,6 +318,81 @@ const UpdateProduct = () => {
             </div>
           </div>
 
+          {/* Discount Information */}
+          <div>
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Discount Information (Optional)</h3>
+            <div className="space-y-4">
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  name="is_on_sale"
+                  checked={formData.is_on_sale}
+                  onChange={handleInputChange}
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                />
+                <label className="ml-2 block text-sm text-gray-900">
+                  This product is on sale
+                </label>
+              </div>
+
+              {formData.is_on_sale && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Discount Percentage (%)
+                    </label>
+                    <Input
+                      type="number"
+                      name="discount_percentage"
+                      value={formData.discount_percentage}
+                      onChange={handleInputChange}
+                      placeholder="0"
+                      step="0.01"
+                      min="0"
+                      max="100"
+                      className="w-full"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Sale Start Date
+                    </label>
+                    <Input
+                      type="datetime-local"
+                      name="sale_start_date"
+                      value={formData.sale_start_date}
+                      onChange={handleInputChange}
+                      className="w-full"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Sale End Date
+                    </label>
+                    <Input
+                      type="datetime-local"
+                      name="sale_end_date"
+                      value={formData.sale_end_date}
+                      onChange={handleInputChange}
+                      className="w-full"
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <p className="text-sm text-blue-800">
+                        <strong>Note:</strong> Leave sale dates empty to make the sale always active. 
+                        Discount percentage should be between 0 and 100.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
           {/* Image Upload */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -314,11 +403,20 @@ const UpdateProduct = () => {
                 <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
                     {imagePreview ? (
-                      <img
-                        src={imagePreview}
-                        alt="Preview"
-                        className="w-32 h-32 object-cover rounded-lg mb-4"
-                      />
+                      <div className="text-center">
+                        <img
+                          src={imagePreview}
+                          alt="Preview"
+                          className="w-32 h-32 object-cover rounded-lg mb-4 mx-auto"
+                        />
+                        <p className="text-sm text-gray-600 mb-2">
+                          {formData.image ? (
+                            <span className="text-green-600 font-medium">✓ New image selected</span>
+                          ) : (
+                            <span className="text-blue-600 font-medium">📷 Current image</span>
+                          )}
+                        </p>
+                      </div>
                     ) : (
                       <Upload className="w-8 h-8 mb-4 text-gray-500" />
                     )}
@@ -329,6 +427,11 @@ const UpdateProduct = () => {
                     <p className="text-xs text-gray-500">
                       PNG, JPG, GIF up to 10MB
                     </p>
+                    {imagePreview && !formData.image && (
+                      <p className="text-xs text-blue-600 mt-2">
+                        Leave empty to keep current image
+                      </p>
+                    )}
                   </div>
                   <input
                     type="file"

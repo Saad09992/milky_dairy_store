@@ -10,13 +10,19 @@ const createCartDb = async (userId) => {
 };
 
 const getCartDb = async (userId) => {
-  // get cart items
+  // get cart items with discount information
   const cart = await pool.query(
-    `SELECT products.*, cart_item.quantity, round((products.price * cart_item.quantity)::numeric, 2) as subtotal from users
-      join cart on users.user_id = cart.user_id
-      join cart_item on cart.id = cart_item.cart_id
-      join products on products.product_id = cart_item.product_id
-      where users.user_id = $1
+    `SELECT products.*, cart_item.quantity, 
+       CASE 
+         WHEN products.is_on_sale = true AND products.discount_percentage > 0 AND products.discounted_price IS NOT NULL 
+         THEN round((products.discounted_price * cart_item.quantity)::numeric, 2)
+         ELSE round((products.price * cart_item.quantity)::numeric, 2)
+       END as subtotal
+       from users
+       join cart on users.user_id = cart.user_id
+       join cart_item on cart.id = cart_item.cart_id
+       join products on products.product_id = cart_item.product_id
+       where users.user_id = $1
       `,
     [userId]
   );
@@ -35,7 +41,14 @@ const addItemDb = async ({ cart_id, product_id, quantity }) => {
   );
 
   const results = await pool.query(
-    "Select products.*, cart_item.quantity, round((products.price * cart_item.quantity)::numeric, 2) as subtotal from cart_item join products on cart_item.product_id = products.product_id where cart_item.cart_id = $1",
+    `Select products.*, cart_item.quantity, 
+       CASE 
+         WHEN products.is_on_sale = true AND products.discount_percentage > 0 AND products.discounted_price IS NOT NULL 
+         THEN round((products.discounted_price * cart_item.quantity)::numeric, 2)
+         ELSE round((products.price * cart_item.quantity)::numeric, 2)
+       END as subtotal
+       from cart_item join products on cart_item.product_id = products.product_id 
+       where cart_item.cart_id = $1`,
     [cart_id]
   );
 
@@ -60,7 +73,11 @@ const increaseItemQuantityDb = async ({ cart_id, product_id }) => {
 
   const results = await pool.query(
     `Select products.*, cart_item.quantity, 
-       round((products.price * cart_item.quantity)::numeric, 2) as subtotal
+       CASE 
+         WHEN products.is_on_sale = true AND products.discount_percentage > 0 AND products.discounted_price IS NOT NULL 
+         THEN round((products.discounted_price * cart_item.quantity)::numeric, 2)
+         ELSE round((products.price * cart_item.quantity)::numeric, 2)
+       END as subtotal
        from cart_item join products 
        on cart_item.product_id = products.product_id 
        where cart_item.cart_id = $1
@@ -78,7 +95,14 @@ const decreaseItemQuantityDb = async ({ cart_id, product_id }) => {
   );
 
   const results = await pool.query(
-    "Select products.*, cart_item.quantity, round((products.price * cart_item.quantity)::numeric, 2) as subtotal from cart_item join products on cart_item.product_id = products.product_id where cart_item.cart_id = $1",
+    `Select products.*, cart_item.quantity, 
+       CASE 
+         WHEN products.is_on_sale = true AND products.discount_percentage > 0 AND products.discounted_price IS NOT NULL 
+         THEN round((products.discounted_price * cart_item.quantity)::numeric, 2)
+         ELSE round((products.price * cart_item.quantity)::numeric, 2)
+       END as subtotal
+       from cart_item join products on cart_item.product_id = products.product_id 
+       where cart_item.cart_id = $1`,
     [cart_id]
   );
   return results.rows;

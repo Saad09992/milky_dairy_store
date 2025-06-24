@@ -13,11 +13,35 @@ const createOrderDb = async ({
     [userId, amount, itemTotal, ref, paymentMethod]
   );
 
-  // copy cart items from the current cart_item table into order_item table
+  // copy cart items from the current cart_item table into order_item table with pricing information
   await pool.query(
     `
-      INSERT INTO order_item(order_id,product_id, quantity) 
-      SELECT $1, product_id, quantity from cart_item where cart_id = $2
+      INSERT INTO order_item(
+        order_id, 
+        product_id, 
+        quantity, 
+        price_at_time, 
+        discounted_price_at_time, 
+        is_on_sale_at_time, 
+        discount_percentage_at_time, 
+        subtotal
+      ) 
+      SELECT 
+        $1, 
+        ci.product_id, 
+        ci.quantity,
+        p.price,
+        p.discounted_price,
+        p.is_on_sale,
+        p.discount_percentage,
+        CASE 
+          WHEN p.is_on_sale = true AND p.discounted_price IS NOT NULL 
+          THEN p.discounted_price * ci.quantity
+          ELSE p.price * ci.quantity
+        END as subtotal
+      FROM cart_item ci
+      JOIN products p ON ci.product_id = p.product_id
+      WHERE ci.cart_id = $2
       returning *
       `,
     [order[0].order_id, cartId]
@@ -40,7 +64,14 @@ const getAllOrdersDb = async ({ userId, limit, offset }) => {
 
 const getOrderDb = async ({ id, userId }) => {
   const { rows: order } = await pool.query(
-    `SELECT products.*, order_item.quantity 
+    `SELECT 
+      products.*, 
+      order_item.quantity,
+      order_item.price_at_time,
+      order_item.discounted_price_at_time,
+      order_item.is_on_sale_at_time,
+      order_item.discount_percentage_at_time,
+      order_item.subtotal
       from orders 
       join order_item
       on order_item.order_id = orders.order_id

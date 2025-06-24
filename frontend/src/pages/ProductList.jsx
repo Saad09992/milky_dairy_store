@@ -3,8 +3,9 @@ import Product from "../components/Product";
 import Spinner from "../components/Spinner";
 import useProduct from "../hooks/useProduct";
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import { ChevronLeft, ChevronRight } from "react-feather";
+import { useLocation, useSearchParams } from "react-router-dom";
+import { ChevronLeft, ChevronRight, Tag } from "react-feather";
+import productService from "../services/product.service";
 
 const ProductList = () => {
   const { products, loading, page, setPage } = useProduct();
@@ -13,6 +14,8 @@ const ProductList = () => {
   const [productsPerPage] = useState(12);
   const location = useLocation();
   const searchQuery = location.state?.searchQuery || "";
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [showSaleOnly, setShowSaleOnly] = useState(searchParams.get("sale") === "true");
 
   // Update total pages when products change
   useEffect(() => {
@@ -35,17 +38,45 @@ const ProductList = () => {
     setSortBy(e.target.value);
   };
 
+  const handleSaleFilter = () => {
+    setShowSaleOnly(!showSaleOnly);
+    setPage(1);
+    if (!showSaleOnly) {
+      setSearchParams({ sale: "true" });
+    } else {
+      setSearchParams({});
+    }
+  };
+
   // Client-side filtering and sorting
   let filteredProducts = [];
   if (Array.isArray(products)) {
-    filteredProducts = products.filter((prod) =>
+    // First filter by sale status if needed
+    let productsToFilter = products;
+    if (showSaleOnly) {
+      productsToFilter = products.filter(product => 
+        product.is_on_sale && product.discount_percentage > 0 && product.discounted_price
+      );
+    }
+
+    // Then filter by search query from navbar
+    filteredProducts = productsToFilter.filter((prod) =>
       prod.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
+    // Then sort
     if (sortBy === "price_asc") {
-      filteredProducts.sort((a, b) => a.price - b.price);
+      filteredProducts.sort((a, b) => {
+        const priceA = a.discounted_price || a.price;
+        const priceB = b.discounted_price || b.price;
+        return priceA - priceB;
+      });
     } else if (sortBy === "price_desc") {
-      filteredProducts.sort((a, b) => b.price - a.price);
+      filteredProducts.sort((a, b) => {
+        const priceA = a.discounted_price || a.price;
+        const priceB = b.discounted_price || b.price;
+        return priceB - priceA;
+      });
     } else if (sortBy === "rating") {
       filteredProducts.sort(
         (a, b) =>
@@ -60,18 +91,46 @@ const ProductList = () => {
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-8">
-      {/* Filter Section */}
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          {showSaleOnly ? "Products on Sale" : "All Products"}
+        </h1>
+        <p className="text-gray-600">
+          {showSaleOnly 
+            ? "Discover amazing deals and discounts" 
+            : "Browse our complete product catalog"
+          }
+        </p>
+      </div>
+
+      {/* Filters */}
       <div className="mb-8 flex flex-col sm:flex-row gap-4 items-center justify-between">
         <div className="text-sm text-gray-600">
-          Page {page} of {totalPages}
+          {filteredProducts.length} products found
         </div>
-        <div className="w-full sm:w-48">
-          <Select value={sortBy} onChange={handleSort}>
-            <option value="default">Sort by: Default</option>
-            <option value="price_asc">Price: Low to High</option>
-            <option value="price_desc">Price: High to Low</option>
-            <option value="rating">Rating</option>
-          </Select>
+        
+        <div className="flex gap-4 items-center">
+          <Button
+            onClick={handleSaleFilter}
+            className={`flex items-center gap-2 ${
+              showSaleOnly 
+                ? "bg-red-600 hover:bg-red-700 !text-white" 
+                : "bg-gray-600 hover:bg-gray-700 !text-white border border-gray-300"
+            }`}
+          >
+            <Tag className="w-4 h-4" />
+            {showSaleOnly ? "Show All" : "Sale Only"}
+          </Button>
+          
+          <div className="w-48">
+            <Select value={sortBy} onChange={handleSort}>
+              <option value="default">Sort by: Default</option>
+              <option value="price_asc">Price: Low to High</option>
+              <option value="price_desc">Price: High to Low</option>
+              <option value="rating">Rating</option>
+            </Select>
+          </div>
         </div>
       </div>
 
@@ -88,10 +147,13 @@ const ProductList = () => {
       {filteredProducts.length === 0 && (
         <div className="text-center py-12">
           <h3 className="text-xl font-semibold text-gray-600 mb-2">
-            No products found
+            {showSaleOnly ? "No products on sale" : "No products found"}
           </h3>
           <p className="text-gray-500">
-            Try adjusting your search or filter criteria
+            {showSaleOnly 
+              ? "Check back later for amazing deals!" 
+              : "Try adjusting your search or filter criteria"
+            }
           </p>
         </div>
       )}

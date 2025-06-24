@@ -12,12 +12,39 @@ import CartItem from "../components/CartItem";
 import useCart from "../hooks/useCart";
 import { formatCurrency } from "../helpers/formatCurrency";
 import RootLayout from "../layout/RootLayout";
-import { ShoppingCart, ArrowRight } from "react-feather";
+import { ShoppingCart, ArrowRight, Tag } from "react-feather";
 import { Link } from "react-router-dom";
 
 const Cart = () => {
   const { cartData, isLoading, cartSubtotal } = useCart();
   const items = cartData?.items || [];
+
+  // Debug logging
+  console.log('Cart data:', {
+    cartData,
+    items,
+    cartSubtotal,
+    hasItems: Array.isArray(items) && items.length > 0
+  });
+
+  if (items.length > 0) {
+    console.log('First item details:', items[0]);
+  }
+
+  // Calculate total savings from discounts
+  const totalSavings = items.reduce((total, item) => {
+    if (item.is_on_sale && item.discount_percentage > 0 && item.discounted_price) {
+      const originalSubtotal = item.price * item.quantity;
+      const discountedSubtotal = item.discounted_price * item.quantity;
+      return total + (originalSubtotal - discountedSubtotal);
+    }
+    return total;
+  }, 0);
+
+  // Calculate original total (without discounts)
+  const originalTotal = items.reduce((total, item) => {
+    return total + (item.price * item.quantity);
+  }, 0);
 
   if (!Array.isArray(items) || items.length === 0) {
     return (
@@ -58,7 +85,7 @@ const Cart = () => {
               <TableHeader>
                 <TableRow className="bg-gray-50">
                   <TableCell className="text-gray-900 font-semibold">Product</TableCell>
-                  <TableCell className="text-gray-900 font-semibold">Amount</TableCell>
+                  <TableCell className="text-gray-900 font-semibold">Price</TableCell>
                   <TableCell className="text-gray-900 font-semibold">Quantity</TableCell>
                   <TableCell className="text-gray-900 font-semibold">Total</TableCell>
                   <TableCell className="text-gray-900 font-semibold">Remove</TableCell>
@@ -74,23 +101,46 @@ const Cart = () => {
             </Table>
           </TableContainer>
           <div className="p-6 bg-gray-50 border-t border-gray-100">
-            <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-              <div className="text-xl font-semibold text-gray-900">
-                Total: <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  {formatCurrency(cartSubtotal)}
-                </span>
+            <div className="flex flex-col gap-4">
+              {/* Savings Summary */}
+              {totalSavings > 0 && (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Tag className="w-4 h-4 text-green-600" />
+                    <span className="font-semibold text-green-800">You're saving money!</span>
+                  </div>
+                  <div className="text-sm text-green-700">
+                    Total savings: <span className="font-bold">{formatCurrency(totalSavings)}</span>
+                  </div>
+                </div>
+              )}
+              
+              {/* Order Summary */}
+              <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div className="flex flex-col gap-2">
+                  {totalSavings > 0 && (
+                    <div className="text-sm text-gray-600">
+                      Original total: <span className="line-through">{formatCurrency(originalTotal)}</span>
+                    </div>
+                  )}
+                  <div className="text-xl font-semibold text-gray-900">
+                    Total: <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                      {formatCurrency(cartSubtotal)}
+                    </span>
+                  </div>
+                </div>
+                <Button
+                  tag={Link}
+                  to={"/cart/checkout"}
+                  state={{
+                    fromCartPage: true,
+                  }}
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-sm hover:shadow-md inline-flex items-center gap-2"
+                >
+                  Proceed to Checkout
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
               </div>
-              <Button
-                tag={Link}
-                to={"/cart/checkout"}
-                state={{
-                  fromCartPage: true,
-                }}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-sm hover:shadow-md inline-flex items-center gap-2"
-              >
-                Proceed to Checkout
-                <ArrowRight className="w-4 h-4" />
-              </Button>
             </div>
           </div>
         </div>

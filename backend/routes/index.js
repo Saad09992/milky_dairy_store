@@ -8,6 +8,7 @@ const payment = require("./payment");
 const review = require("./review");
 const nutrition = require("./nutrition");
 const farm = require("./farm");
+const notification = require("./notification");
 
 router.use("/auth", auth);
 router.use("/users", users);
@@ -18,5 +19,6 @@ router.use("/payment", payment);
 router.use("/review", review);
 router.use("/nutrition", nutrition);
 router.use("/farms", farm);
+router.use("/notifications", notification);
 
 module.exports = router;

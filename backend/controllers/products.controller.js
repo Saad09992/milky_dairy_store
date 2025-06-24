@@ -7,6 +7,16 @@ const getAllProducts = async (req, res) => {
   res.json(products);
 };
 
+const getProductsOnSale = async (req, res) => {
+  try {
+    const { page = 1 } = req.query;
+    const products = await productService.getProductsOnSale(page);
+    res.json(products);
+  } catch (error) {
+    res.status(error.statusCode || 500).json({ error: error.message });
+  }
+};
+
 const createProduct = async (req, res) => {
   try {
     const productData = {
@@ -52,9 +62,14 @@ const updateProduct = async (req, res) => {
     const { id } = req.params;
     const productData = {
       ...req.body,
-      image_url: req.file ? req.file.filename : null,
       id,
     };
+    
+    // Only set image_url if a new file is uploaded
+    if (req.file) {
+      productData.image_url = req.file.filename;
+    }
+    
     const updatedProduct = await productService.updateProduct(productData);
     res.status(200).json(updatedProduct);
   } catch (error) {
@@ -81,4 +96,5 @@ module.exports = {
   getAllProducts,
   getProductByName,
   getProductBySlug,
+  getProductsOnSale,
 };
