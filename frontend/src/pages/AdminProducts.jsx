@@ -85,6 +85,29 @@ const AdminProducts = () => {
     return parts.length > 0 ? parts.join(", ") : "No nutrition data";
   };
 
+  const getSaleStatus = (product) => {
+    if (!product.is_on_sale || !product.discount_percentage) {
+      return { status: "none", text: "No Sale", color: "gray" };
+    }
+
+    const now = new Date();
+    const startDate = product.sale_start_date ? new Date(product.sale_start_date) : null;
+    const endDate = product.sale_end_date ? new Date(product.sale_end_date) : null;
+
+    // Check if sale is active
+    const isActive = (!startDate || startDate <= now) && (!endDate || endDate >= now);
+    
+    if (isActive) {
+      return { status: "active", text: "Active Sale", color: "green" };
+    } else if (endDate && endDate < now) {
+      return { status: "expired", text: "Sale Expired", color: "red" };
+    } else if (startDate && startDate > now) {
+      return { status: "pending", text: "Sale Pending", color: "yellow" };
+    } else {
+      return { status: "active", text: "Active Sale", color: "green" };
+    }
+  };
+
   if (loading) {
     return (
       <div className="w-full max-w-7xl mx-auto px-4 py-8">
@@ -125,6 +148,51 @@ const AdminProducts = () => {
         </div>
       </div>
 
+      {/* Sale Status Summary */}
+      {(() => {
+        const saleStats = products.reduce((stats, product) => {
+          const status = getSaleStatus(product);
+          stats[status.status] = (stats[status.status] || 0) + 1;
+          return stats;
+        }, {});
+
+        const hasSales = saleStats.active || saleStats.expired || saleStats.pending;
+
+        if (!hasSales) return null;
+
+        return (
+          <div className="mb-6 bg-white rounded-lg border border-gray-200 p-4">
+            <h3 className="text-lg font-medium text-gray-900 mb-3">Sale Status Summary</h3>
+            <div className="flex flex-wrap gap-4">
+              {saleStats.active && (
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  <span className="text-sm text-gray-700">
+                    {saleStats.active} Active Sale{saleStats.active !== 1 ? 's' : ''}
+                  </span>
+                </div>
+              )}
+              {saleStats.expired && (
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                  <span className="text-sm text-gray-700">
+                    {saleStats.expired} Expired Sale{saleStats.expired !== 1 ? 's' : ''}
+                  </span>
+                </div>
+              )}
+              {saleStats.pending && (
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                  <span className="text-sm text-gray-700">
+                    {saleStats.pending} Pending Sale{saleStats.pending !== 1 ? 's' : ''}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      })()}
+
       {/* Products Table */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
@@ -139,6 +207,9 @@ const AdminProducts = () => {
                 </th>
                 <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Discount
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Sale Status
                 </th>
                 <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Nutrition
@@ -195,6 +266,36 @@ const AdminProducts = () => {
                     ) : (
                       <span className="text-sm text-gray-500">No discount</span>
                     )}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {(() => {
+                      const saleStatus = getSaleStatus(product);
+                      const getStatusColor = (status) => {
+                        switch (status) {
+                          case 'active':
+                            return 'bg-green-100 text-green-800 border-green-200';
+                          case 'expired':
+                            return 'bg-red-100 text-red-800 border-red-200';
+                          case 'pending':
+                            return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+                          default:
+                            return 'bg-gray-100 text-gray-800 border-gray-200';
+                        }
+                      };
+                      
+                      return (
+                        <div className="space-y-1">
+                          <Badge className={`${getStatusColor(saleStatus.status)} border`}>
+                            {saleStatus.text}
+                          </Badge>
+                          {product.sale_start_date && product.sale_end_date && (
+                            <div className="text-xs text-gray-500">
+                              {new Date(product.sale_start_date).toLocaleDateString()} - {new Date(product.sale_end_date).toLocaleDateString()}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900">

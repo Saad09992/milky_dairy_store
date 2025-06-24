@@ -27,6 +27,14 @@ const UpdateProduct = () => {
     sale_end_date: "",
   });
 
+  // Helper function to format date for datetime-local input
+  const formatDateForInput = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    // Format as YYYY-MM-DDTHH:MM (datetime-local format)
+    return date.toISOString().slice(0, 16);
+  };
+
   useEffect(() => {
     fetchProduct();
   }, [id]);
@@ -361,7 +369,7 @@ const UpdateProduct = () => {
                     <Input
                       type="datetime-local"
                       name="sale_start_date"
-                      value={formData.sale_start_date}
+                      value={formatDateForInput(formData.sale_start_date)}
                       onChange={handleInputChange}
                       className="w-full"
                     />
@@ -374,10 +382,27 @@ const UpdateProduct = () => {
                     <Input
                       type="datetime-local"
                       name="sale_end_date"
-                      value={formData.sale_end_date}
+                      value={formatDateForInput(formData.sale_end_date)}
                       onChange={handleInputChange}
                       className="w-full"
                     />
+                  </div>
+
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="no_expiry"
+                      checked={!formData.sale_end_date}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setFormData(prev => ({ ...prev, sale_end_date: "" }));
+                        }
+                      }}
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    />
+                    <label className="ml-2 block text-sm text-gray-900">
+                      No expiry date (sale never ends)
+                    </label>
                   </div>
 
                   <div className="md:col-span-2">
