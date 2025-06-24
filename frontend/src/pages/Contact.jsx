@@ -34,15 +34,14 @@ const Contact = () => {
       try {
         // You'll need to replace these with your actual EmailJS credentials
         const result = await emailjs.send(
-          "YOUR_SERVICE_ID", // Replace with your EmailJS service ID
-          "YOUR_TEMPLATE_ID", // Replace with your EmailJS template ID
+          "service_52raxt8",
+          "template_y3klqv8",
           {
-            from_name: values.name,
-            from_email: values.email,
+            user_name: values.name,
+            user_email: values.email,
             message: values.message,
-            to_name: "Admin", // This will be sent to the admin
           },
-          "YOUR_PUBLIC_KEY" // Replace with your EmailJS public key
+          "CBlc0d-4Enp75R0pt"
         );
 
         if (result.status === 200) {
