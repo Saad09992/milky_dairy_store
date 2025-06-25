@@ -17,6 +17,11 @@ const ProductList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [showSaleOnly, setShowSaleOnly] = useState(searchParams.get("sale") === "true");
 
+  // Set document title
+  useEffect(() => {
+    document.title = "Home | Milky Dairy";
+  }, []);
+
   // Update total pages when products change
   useEffect(() => {
     if (Array.isArray(products)) {

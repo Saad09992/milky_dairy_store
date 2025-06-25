@@ -1,0 +1,17 @@
+
+1. Clone the repo
+    git clone https://github.com/Saad09992/milky_dairy_store.git
+
+2. Download postgresql
+    https://www.enterprisedb.com/downloads/postgres-postgresql-downloads
+
+3. Download pgAdmin4
+    https://www.postgresql.org/ftp/pgadmin/pgadmin4/v9.4/windows/
+
+4. In the cloned folder run "npm install" then "cd frontend" and "npm install" then "cd ../backend" and "npm install" then "cd .."
+
+5. Open pgAdmin4, connect to localhost, create database "milky_dairy", right click and open query tool, click on folder icon and select the init.sql which is in the cloned folder "backend/config/init.sql", after selecting click run
+
+6. In the cloned folder run "npm start"
+
+7. Go to the url displayed in the terminal.
