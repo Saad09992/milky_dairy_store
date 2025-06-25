@@ -10,7 +10,7 @@ import useCart from "../hooks/useCart";
 import useAuth from "../hooks/useAuth";
 import { useState, useRef, useEffect } from "react";
 import { LogOut, ShoppingCart, User, Search, X, Settings, Package, MapPin, Mail } from "react-feather";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const Nav = () => {
   const { cartTotal } = useCart();
@@ -19,6 +19,10 @@ const Nav = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Check if user is on the Products page (root path)
+  const isOnProductsPage = location.pathname === "/";
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -65,28 +69,31 @@ const Nav = () => {
         </h1>
       </Link>
 
-      <div className="hidden md:flex items-center flex-1 max-w-xl mx-8">
-        <div className="relative w-full">
-          <Input
-            type="text"
-            placeholder="Search products..."
-            value={searchQuery}
-            onChange={handleSearch}
-            onKeyDown={handleSearchSubmit}
-            className="w-full pl-10 pr-10 py-2 rounded-lg border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-colors duration-200 bg-white shadow-sm"
-          />
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-          {searchQuery && (
-            <button
-              onClick={handleClearSearch}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 hover:text-gray-600 transition-colors"
-              aria-label="Clear search"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          )}
+      {/* Searchbar - Only show on Products page */}
+      {isOnProductsPage && (
+        <div className="hidden md:flex items-center flex-1 max-w-xl mx-8">
+          <div className="relative w-full">
+            <Input
+              type="text"
+              placeholder="Search products..."
+              value={searchQuery}
+              onChange={handleSearch}
+              onKeyDown={handleSearchSubmit}
+              className="w-full pl-10 pr-10 py-2 rounded-lg border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-colors duration-200 bg-white shadow-sm"
+            />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            {searchQuery && (
+              <button
+                onClick={handleClearSearch}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 hover:text-gray-600 transition-colors"
+                aria-label="Clear search"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="flex items-center gap-3 sm:gap-4">
         {/* Farms Link - Always Visible */}
