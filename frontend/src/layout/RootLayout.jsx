@@ -1,11 +1,10 @@
 import Nav from "../components/Nav";
 import Spinner from "../components/Spinner";
 
-function RootLayout({ children, title, loading }) {
+function RootLayout({ children, loading }) {
   return (
     <>
       <meta charSet="utf-8" />
-      <title>{title ?? "Home"} | Milky Dairy</title>
       <meta
         name="description"
         content="E-commerce store built with React, Node, Express and Postgres"

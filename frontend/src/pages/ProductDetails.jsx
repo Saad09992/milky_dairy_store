@@ -27,6 +27,15 @@ const ProductDetails = () => {
     error,
   } = useSelector((state) => state.productReducer);
 
+  // Set document title
+  useEffect(() => {
+    if (product) {
+      document.title = `${product.name} | Milky Dairy`;
+    } else {
+      document.title = "Product Details | Milky Dairy";
+    }
+  }, [product]);
+
   // Find if product is in cart
   const items = Array.isArray(cartData?.items) ? cartData.items : [];
   const cartItem = items.find(
@@ -229,109 +238,107 @@ const ProductDetails = () => {
   };
 
   return (
-    <RootLayout loading={isFetching} title={product?.name}>
-      <section className="body-font overflow-hidden">
-        <div className="container px-5 py-24 mx-auto">
-          <div className="lg:w-4/5 mx-auto flex flex-wrap">
-            <div className="lg:w-1/2 w-full lg:h-auto h-64 relative">
-              <img
-                decoding="async"
-                loading="lazy"
-                src={`http://localhost:9000/images/${product?.image_url}`}
-                alt={product?.name}
-                className="w-full h-full object-contain md:object-cover object-center rounded"
-              />
-              {/* Sale Badge */}
-              {isOnSale && (
-                <div className="absolute top-4 left-4 bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-full shadow-lg">
-                  <Tag className="w-4 h-4 inline mr-1" />
-                  {product.discount_percentage}% OFF
-                </div>
-              )}
-            </div>
-            <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
-              <h1 className="text-3xl title-font font-medium mb-1">
-                {product?.name}
-              </h1>
+    <section className="body-font overflow-hidden">
+      <div className="container px-5 py-24 mx-auto">
+        <div className="lg:w-4/5 mx-auto flex flex-wrap">
+          <div className="lg:w-1/2 w-full lg:h-auto h-64 relative">
+            <img
+              decoding="async"
+              loading="lazy"
+              src={`http://localhost:9000/images/${product?.image_url}`}
+              alt={product?.name}
+              className="w-full h-full object-contain md:object-cover object-center rounded"
+            />
+            {/* Sale Badge */}
+            {isOnSale && (
+              <div className="absolute top-4 left-4 bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-full shadow-lg">
+                <Tag className="w-4 h-4 inline mr-1" />
+                {product.discount_percentage}% OFF
+              </div>
+            )}
+          </div>
+          <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
+            <h1 className="text-3xl title-font font-medium mb-1">
+              {product?.name}
+            </h1>
 
-              <p className="leading-relaxed pb-6 border-b-2 border-gray-800">
-                {product?.description}
-              </p>
-              <div className="flex mt-4 justify-between items-center">
-                <div className="flex flex-col">
-                  {/* Price Display */}
-                  {isOnSale ? (
-                    <div className="flex items-center gap-3">
-                      <span className="title-font font-medium text-2xl text-red-600">
-                        {formatCurrency(displayPrice)}
-                      </span>
-                      <span className="title-font font-medium text-lg text-gray-500 line-through">
-                        {formatCurrency(product?.price)}
-                      </span>
-                      <Badge type="success" className="bg-red-100 text-red-800">
-                        Save {formatCurrency(product?.price - displayPrice)}
-                      </Badge>
-                    </div>
-                  ) : (
-                    <span className="title-font font-medium text-2xl">
+            <p className="leading-relaxed pb-6 border-b-2 border-gray-800">
+              {product?.description}
+            </p>
+            <div className="flex mt-4 justify-between items-center">
+              <div className="flex flex-col">
+                {/* Price Display */}
+                {isOnSale ? (
+                  <div className="flex items-center gap-3">
+                    <span className="title-font font-medium text-2xl text-red-600">
                       {formatCurrency(displayPrice)}
                     </span>
-                  )}
-                </div>
-                
-                {cartItem ? (
-                  <div className="flex items-center">
-                    <Button
-                      size="small"
-                      layout="outline"
-                      onClick={handleDecrement}
-                    >
-                      -
-                    </Button>
-                    <span className="mx-2 font-semibold">
-                      {cartItem.quantity}
+                    <span className="title-font font-medium text-lg text-gray-500 line-through">
+                      {formatCurrency(product?.price)}
                     </span>
-                    <Button
-                      size="small"
-                      layout="outline"
-                      onClick={handleIncrement}
-                    >
-                      +
-                    </Button>
+                    <Badge type="success" className="bg-red-100 text-red-800">
+                      Save {formatCurrency(product?.price - displayPrice)}
+                    </Badge>
                   </div>
                 ) : (
-                  <Button
-                    className={`transition-all duration-200 shadow-sm hover:shadow-md active:scale-95 ${
-                      isOnSale 
-                        ? "bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700"
-                        : "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700"
-                    }`}
-                    onClick={(e) => addToCart(e)}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? (
-                      <ClipLoader
-                        cssOverride={{ margin: "0 auto" }}
-                        color="#ffffff"
-                        size={20}
-                      />
-                    ) : (
-                      "Add to Cart"
-                    )}
-                  </Button>
+                  <span className="title-font font-medium text-2xl">
+                    {formatCurrency(displayPrice)}
+                  </span>
                 )}
               </div>
+              
+              {cartItem ? (
+                <div className="flex items-center">
+                  <Button
+                    size="small"
+                    layout="outline"
+                    onClick={handleDecrement}
+                  >
+                    -
+                  </Button>
+                  <span className="mx-2 font-semibold">
+                    {cartItem.quantity}
+                  </span>
+                  <Button
+                    size="small"
+                    layout="outline"
+                    onClick={handleIncrement}
+                  >
+                    +
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  className={`transition-all duration-200 shadow-sm hover:shadow-md active:scale-95 ${
+                    isOnSale 
+                      ? "bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700"
+                      : "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700"
+                  }`}
+                  onClick={(e) => addToCart(e)}
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <ClipLoader
+                      cssOverride={{ margin: "0 auto" }}
+                      color="#ffffff"
+                      size={20}
+                    />
+                  ) : (
+                    "Add to Cart"
+                  )}
+                </Button>
+              )}
             </div>
           </div>
         </div>
-      </section>
+      </div>
 
       {/* Nutrition Information Section */}
       <NutritionInfo />
 
       {/* Reviews Section */}
       {product?.product_id && <ReviewsSection productId={product.product_id} />}
-    </RootLayout>
+    </section>
   );
 };
 

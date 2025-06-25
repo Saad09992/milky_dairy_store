@@ -18,6 +18,11 @@ const Farms = () => {
   const [filterType, setFilterType] = useState("all"); // all, location, certification
   const [filterValue, setFilterValue] = useState("");
 
+  // Set document title
+  useEffect(() => {
+    document.title = "Farms | Milky Dairy";
+  }, []);
+
   useEffect(() => {
     fetchFarms();
   }, [currentPage]);

@@ -23,6 +23,17 @@ const FarmDetails = () => {
   const [farm, setFarm] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Set document title
+  useEffect(() => {
+    if (farm) {
+      document.title = `${farm.name} | Milky Dairy`;
+    } else if (loading) {
+      document.title = "Farm Details | Milky Dairy";
+    } else {
+      document.title = "Farm Not Found | Milky Dairy";
+    }
+  }, [farm, loading]);
+
   useEffect(() => {
     fetchFarm();
   }, [id]);
