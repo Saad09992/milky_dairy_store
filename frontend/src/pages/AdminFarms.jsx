@@ -201,9 +201,9 @@ const AdminFarms = () => {
 
         {/* Stats */}
         <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-blue-50 p-4 rounded-lg">
-            <div className="text-2xl font-bold text-blue-600">{totalFarms}</div>
-            <div className="text-sm text-blue-600">
+          <div className="bg-dairy-primary/10 p-4 rounded-lg">
+            <div className="text-2xl font-bold text-dairy-primary">{totalFarms}</div>
+            <div className="text-sm text-dairy-primary">
               {searchQuery ? 'Matching Farms' : 'Total Farms'}
             </div>
           </div>
@@ -307,7 +307,7 @@ const AdminFarms = () => {
                         <div className="flex items-center space-x-2">
                           <button
                             onClick={() => handleViewFarm(farm)}
-                            className="p-2 text-blue-600 hover:text-blue-900 hover:bg-blue-50 rounded-lg transition-colors"
+                            className="p-2 text-dairy-primary hover:text-dairy-primary/80 hover:bg-dairy-primary/10 rounded-lg transition-colors"
                             title="View Farm Details"
                           >
                             <Eye className="w-4 h-4" />

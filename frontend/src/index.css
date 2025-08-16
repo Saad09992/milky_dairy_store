@@ -1,1 +1,160 @@
 @import "tailwindcss";
+
+/* Custom Dairy Delight Color Scheme */
+:root {
+  /* Primary Colors - Warm Cream/Beige */
+  --color-primary-50: #fefcf9;
+  --color-primary-100: #fdf8f0;
+  --color-primary-200: #faf0d9;
+  --color-primary-300: #f5e4b8;
+  --color-primary-400: #eed391;
+  --color-primary-500: #e6c06a;
+  --color-primary-600: #d4a94a;
+  --color-primary-700: #b88d3a;
+  --color-primary-800: #947032;
+  --color-primary-900: #7a5c2e;
+  
+  /* Secondary Colors - Rich Brown/Chocolate */
+  --color-secondary-50: #fdf8f6;
+  --color-secondary-100: #fbe9e4;
+  --color-secondary-200: #f7d3c8;
+  --color-secondary-300: #f0b5a3;
+  --color-secondary-400: #e68f73;
+  --color-secondary-500: #d96f52;
+  --color-secondary-600: #c55a3e;
+  --color-secondary-700: #a44732;
+  --color-secondary-800: #863a2e;
+  --color-secondary-900: #6f3129;
+  
+  /* Accent Colors - Golden Yellow/Honey */
+  --color-accent-50: #fffbeb;
+  --color-accent-100: #fef3c7;
+  --color-accent-200: #fde68a;
+  --color-accent-300: #fcd34d;
+  --color-accent-400: #fbbf24;
+  --color-accent-500: #f59e0b;
+  --color-accent-600: #d97706;
+  --color-accent-700: #b45309;
+  --color-accent-800: #92400e;
+  --color-accent-900: #78350f;
+  
+  /* Background Colors - Soft Cream/Off-white */
+  --color-bg-50: #fefcf9;
+  --color-bg-100: #fdf8f0;
+  --color-bg-200: #faf0d9;
+  --color-bg-300: #f5e4b8;
+  --color-bg-400: #eed391;
+  --color-bg-500: #e6c06a;
+  
+  /* Text Colors */
+  --color-text-primary: #2d1b0e;
+  --color-text-secondary: #5d4037;
+  --color-text-muted: #8d6e63;
+  
+  /* Border Colors */
+  --color-border-light: #f5e4b8;
+  --color-border-medium: #eed391;
+  --color-border-dark: #d4a94a;
+}
+
+/* Custom utility classes for the new color scheme */
+.bg-dairy-bg {
+  background-color: var(--color-bg-50);
+}
+
+.bg-dairy-primary {
+  background-color: var(--color-primary-500);
+}
+
+.bg-dairy-primary-hover:hover {
+  background-color: var(--color-primary-600);
+}
+
+.bg-dairy-secondary {
+  background-color: var(--color-secondary-500);
+}
+
+.bg-dairy-secondary-hover:hover {
+  background-color: var(--color-secondary-600);
+}
+
+.bg-dairy-accent {
+  background-color: var(--color-accent-500);
+}
+
+.bg-dairy-accent-hover:hover {
+  background-color: var(--color-accent-600);
+}
+
+.text-dairy-primary {
+  color: var(--color-primary-600);
+}
+
+.text-dairy-secondary {
+  color: var(--color-secondary-600);
+}
+
+.text-dairy-accent {
+  color: var(--color-accent-600);
+}
+
+.border-dairy-primary {
+  border-color: var(--color-primary-300);
+}
+
+.border-dairy-primary-focus:focus {
+  border-color: var(--color-primary-500);
+}
+
+.ring-dairy-primary:focus {
+  --tw-ring-color: var(--color-primary-200);
+}
+
+/* Custom gradient classes */
+.bg-gradient-dairy {
+  background: linear-gradient(to right, var(--color-primary-500), var(--color-secondary-500));
+}
+
+.bg-gradient-dairy-hover:hover {
+  background: linear-gradient(to right, var(--color-primary-600), var(--color-secondary-600));
+}
+
+.bg-gradient-dairy-text {
+  background: linear-gradient(to right, var(--color-primary-600), var(--color-secondary-600));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.bg-gradient-dairy-accent {
+  background: linear-gradient(to right, var(--color-primary-500), var(--color-accent-500));
+}
+
+.bg-gradient-dairy-accent-hover:hover {
+  background: linear-gradient(to right, var(--color-primary-600), var(--color-accent-600));
+}
+
+/* Custom button styles */
+.btn-dairy-primary {
+  background: linear-gradient(to right, var(--color-primary-500), var(--color-secondary-500));
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.btn-dairy-primary:hover {
+  background: linear-gradient(to right, var(--color-primary-600), var(--color-secondary-600));
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(212, 169, 74, 0.3);
+}
+
+.btn-dairy-accent {
+  background: linear-gradient(to right, var(--color-primary-500), var(--color-accent-500));
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.btn-dairy-accent:hover {
+  background: linear-gradient(to right, var(--color-primary-600), var(--color-accent-600));
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}

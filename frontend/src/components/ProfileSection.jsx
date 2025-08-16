@@ -2,7 +2,7 @@ import { User, MapPin } from "react-feather";
 
 const ProfileSection = ({ icon: Icon, title, children, iconColor = "blue" }) => {
   const colorClasses = {
-    blue: "bg-blue-100 text-blue-600",
+    blue: "bg-dairy-primary/20 text-dairy-primary",
     purple: "bg-purple-100 text-purple-600",
     green: "bg-green-100 text-green-600",
     red: "bg-red-100 text-red-600",

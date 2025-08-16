@@ -89,7 +89,7 @@ const OrderSummary = () => {
           <span className="text-xl font-medium text-gray-700">
             Total Amount
           </span>
-          <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          <span className="text-2xl font-bold bg-gradient-dairy-text">
             {formatCurrency(cartSubtotal)}
           </span>
         </div>

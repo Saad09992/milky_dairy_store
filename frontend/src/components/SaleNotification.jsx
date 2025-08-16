@@ -42,9 +42,9 @@ const SaleNotification = ({ onClose }) => {
             Send email notifications to all registered users about products currently on sale.
           </p>
           
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="bg-dairy-primary/10 border border-dairy-primary/20 rounded-lg p-4">
             <div className="flex items-start">
-              <CheckCircle className="w-5 h-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
+              <CheckCircle className="w-5 h-5 text-dairy-primary mr-2 mt-0.5 flex-shrink-0" />
               <div>
                 <p className="text-sm text-blue-800 font-medium mb-1">
                   What happens next?

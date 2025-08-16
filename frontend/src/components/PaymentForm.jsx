@@ -81,7 +81,7 @@ const PaymentForm = ({ previousStep }) => {
                 value="CASH"
                 checked={formik.values.paymentMethod === "CASH"}
                 onChange={formik.handleChange}
-                className="form-radio text-blue-600 focus:ring-blue-500"
+                className="form-radio text-dairy-primary focus:ring-dairy-primary"
               />
               <div className="ml-3 flex items-center gap-2">
                 <DollarSign className="w-5 h-5 text-gray-600" />
@@ -95,7 +95,7 @@ const PaymentForm = ({ previousStep }) => {
                 value="STRIPE"
                 checked={formik.values.paymentMethod === "STRIPE"}
                 onChange={formik.handleChange}
-                className="form-radio text-blue-600 focus:ring-blue-500"
+                className="form-radio text-dairy-primary focus:ring-dairy-primary"
               />
               <div className="ml-3 flex items-center gap-2">
                 <CreditCard className="w-5 h-5 text-gray-600" />
@@ -158,7 +158,7 @@ const PaymentForm = ({ previousStep }) => {
               }
               type="submit"
               size="small"
-              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-gradient-dairy text-white hover:bg-gradient-dairy-hover transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {formik.isSubmitting ? "Processing..." : "Place Order"}
             </Button>

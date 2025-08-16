@@ -56,7 +56,7 @@ const AccountForm = () => {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values.fullname}
-          className="mt-2 block w-full rounded-lg border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-colors duration-200 bg-white shadow-sm"
+          className="mt-2 block w-full rounded-lg border-gray-200 focus:border-dairy-primary focus:ring focus:ring-dairy-primary focus:ring-opacity-50 transition-colors duration-200 bg-white shadow-sm"
         />
         {formik.touched.fullname && formik.errors.fullname && (
           <HelperText valid={false} className="text-red-600 mt-1">
@@ -75,7 +75,7 @@ const AccountForm = () => {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values.username}
-          className="mt-2 block w-full rounded-lg border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-colors duration-200 bg-white shadow-sm"
+          className="mt-2 block w-full rounded-lg border-gray-200 focus:border-dairy-primary focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-colors duration-200 bg-white shadow-sm"
         />
         {formik.touched.username && formik.errors.username && (
           <HelperText valid={false} className="text-red-600 mt-1">
@@ -94,7 +94,7 @@ const AccountForm = () => {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values.email}
-          className="mt-2 block w-full rounded-lg border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-colors duration-200 bg-white shadow-sm"
+          className="mt-2 block w-full rounded-lg border-gray-200 focus:border-dairy-primary focus:ring focus:ring-dairy-primary focus:ring-opacity-50 transition-colors duration-200 bg-white shadow-sm"
         />
         {formik.touched.email && formik.errors.email && (
           <HelperText valid={false} className="text-red-600 mt-1">
@@ -107,7 +107,7 @@ const AccountForm = () => {
         <Button 
           type="submit" 
           disabled={formik.isSubmitting} 
-          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-gradient-dairy text-white hover:bg-gradient-dairy-hover transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {formik.isSubmitting ? "Updating..." : "Update Account"}
         </Button>

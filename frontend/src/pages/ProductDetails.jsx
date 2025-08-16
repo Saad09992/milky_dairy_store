@@ -127,13 +127,13 @@ const ProductDetails = () => {
             {/* Protein */}
             {nutrition.protein && (
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <Activity className="w-6 h-6 text-blue-600" />
+                <div className="w-12 h-12 bg-dairy-primary/20 rounded-lg flex items-center justify-center mx-auto mb-4">
+                  <Activity className="w-6 h-6 text-dairy-primary" />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   Protein
                 </h3>
-                <p className="text-2xl font-bold text-blue-600">
+                <p className="text-2xl font-bold text-dairy-primary">
                   {nutrition.protein}
                 </p>
                 <p className="text-sm text-gray-500">grams</p>
@@ -312,7 +312,7 @@ const ProductDetails = () => {
                   className={`transition-all duration-200 shadow-sm hover:shadow-md active:scale-95 ${
                     isOnSale 
                       ? "bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700"
-                      : "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700"
+                      : "bg-gradient-dairy text-white hover:bg-gradient-dairy-hover"
                   }`}
                   onClick={(e) => addToCart(e)}
                   disabled={isLoading}

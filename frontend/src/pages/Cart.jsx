@@ -58,7 +58,7 @@ const Cart = () => {
   if (!Array.isArray(items) || items.length === 0) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-16">
-        <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+        <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-dairy-text">
           Shopping Cart
         </h1>
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center">
@@ -70,7 +70,7 @@ const Cart = () => {
           <Button 
             tag={Link} 
             to="/"
-            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-sm hover:shadow-md inline-flex items-center gap-2"
+            className="bg-gradient-dairy text-white hover:bg-gradient-dairy-hover transition-all duration-200 shadow-sm hover:shadow-md inline-flex items-center gap-2"
           >
             Continue shopping
             <ArrowRight className="w-4 h-4" />
@@ -82,7 +82,7 @@ const Cart = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-16">
-      <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-dairy-text">
         Shopping Cart
       </h1>
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -130,7 +130,7 @@ const Cart = () => {
                   </div>
                 )}
                 <div className="text-xl font-semibold text-gray-900">
-                  Total: <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  Total: <span className="bg-gradient-dairy-text">
                     {formatCurrency(cartSubtotal)}
                   </span>
                 </div>
@@ -141,7 +141,7 @@ const Cart = () => {
                 state={{
                   fromCartPage: true,
                 }}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-sm hover:shadow-md inline-flex items-center gap-2"
+                className="bg-gradient-dairy text-white hover:bg-gradient-dairy-hover transition-all duration-200 shadow-sm hover:shadow-md inline-flex items-center gap-2"
               >
                 Proceed to Checkout
                 <ArrowRight className="w-4 h-4" />

@@ -162,16 +162,16 @@ const FarmDetails = () => {
           {farm.certifications && farm.certifications.length > 0 && (
             <Card className="p-6">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <Award className="w-5 h-5 text-blue-600" />
+                <div className="w-10 h-10 bg-dairy-primary/20 rounded-lg flex items-center justify-center">
+                  <Award className="w-5 h-5 text-dairy-primary" />
                 </div>
                 <h2 className="text-2xl font-semibold text-gray-900">Certifications & Standards</h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {formatCertifications(farm.certifications).map((cert, index) => (
-                  <div key={index} className="flex items-center p-4 bg-blue-50 rounded-lg">
-                    <Award className="w-5 h-5 text-blue-600 mr-3" />
-                    <span className="font-medium text-blue-900">{cert}</span>
+                  <div key={index} className="flex items-center p-4 bg-dairy-primary/10 rounded-lg">
+                    <Award className="w-5 h-5 text-dairy-primary mr-3" />
+                    <span className="font-medium text-dairy-primary/80">{cert}</span>
                   </div>
                 ))}
               </div>
@@ -195,7 +195,7 @@ const FarmDetails = () => {
                   <Mail className="w-5 h-5 text-gray-600 mr-3" />
                   <a 
                     href={`mailto:${farm.contact_email}`}
-                    className="text-blue-600 hover:text-blue-800 font-medium"
+                    className="text-dairy-primary hover:text-dairy-primary/80 font-medium"
                   >
                     {farm.contact_email}
                   </a>
@@ -206,7 +206,7 @@ const FarmDetails = () => {
                   <Phone className="w-5 h-5 text-gray-600 mr-3" />
                   <a 
                     href={`tel:${farm.contact_phone}`}
-                    className="text-blue-600 hover:text-blue-800 font-medium"
+                    className="text-dairy-primary hover:text-dairy-primary/80 font-medium"
                   >
                     {farm.contact_phone}
                   </a>
@@ -219,7 +219,7 @@ const FarmDetails = () => {
                     href={farm.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-600 hover:text-blue-800 font-medium"
+                    className="text-dairy-primary hover:text-dairy-primary/80 font-medium"
                   >
                     Visit Website
                   </a>
@@ -262,7 +262,7 @@ const FarmDetails = () => {
             <div className="space-y-3">
               <Button 
                 onClick={() => navigate("/farms")}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                className="w-full bg-gradient-dairy text-white hover:bg-gradient-dairy-hover"
               >
                 View All Farms
               </Button>

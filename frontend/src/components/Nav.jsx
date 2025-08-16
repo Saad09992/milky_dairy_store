@@ -62,10 +62,10 @@ const Nav = () => {
     <nav className="flex items-center justify-between px-4 sm:px-6 lg:px-8 xl:px-36 py-4 backdrop-blur-lg bg-white/95 shadow-sm shadow-black/5 fixed w-full top-0 z-50 border-b border-gray-100/50">
       <Link
         to="/"
-        className="text-gray-900 text-xl sm:text-2xl font-bold hover:text-blue-600 transition-all duration-300 ease-out transform hover:scale-105 dark:text-gray-100 dark:hover:text-blue-400"
+        className="text-gray-900 text-xl sm:text-2xl font-bold hover:text-dairy-primary transition-all duration-300 ease-out transform hover:scale-105 dark:text-gray-100 dark:hover:text-dairy-primary"
       >
-        <h1 className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-          Milky Dairy
+        <h1 className="bg-gradient-dairy-text">
+          Dairy Delight
         </h1>
       </Link>
 
@@ -79,7 +79,7 @@ const Nav = () => {
               value={searchQuery}
               onChange={handleSearch}
               onKeyDown={handleSearchSubmit}
-              className="w-full pl-10 pr-10 py-2 rounded-lg border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-colors duration-200 bg-white shadow-sm"
+              className="w-full pl-10 pr-10 py-2 rounded-lg border-gray-200 focus:border-dairy-primary focus:ring focus:ring-dairy-primary focus:ring-opacity-50 transition-colors duration-200 bg-white shadow-sm"
             />
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
             {searchQuery && (
@@ -120,7 +120,7 @@ const Nav = () => {
               </button>
             </Link>
             <Link to="/cart" className="relative">
-              <button className="flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 ease-out border border-gray-200 hover:border-blue-200 hover:shadow-sm active:scale-95 relative hover:shadow-md">
+              <button className="flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium text-gray-700 hover:text-dairy-primary hover:bg-dairy-primary/10 rounded-lg transition-all duration-200 ease-out border border-gray-200 hover:border-dairy-primary hover:shadow-sm active:scale-95 relative hover:shadow-md">
                 <span className="hidden sm:block">Cart</span>
                 <ShoppingCart className="w-4 h-4 sm:hidden" />
                 {cartTotal > 0 && (
@@ -134,7 +134,7 @@ const Nav = () => {
         ) : (
           <>
             <Link to="/cart" className="relative">
-              <button className="flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 ease-out border border-gray-200 hover:border-blue-200 hover:shadow-sm active:scale-95 relative hover:shadow-md">
+              <button className="flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium text-gray-700 hover:text-dairy-primary hover:bg-dairy-primary/10 rounded-lg transition-all duration-200 ease-out border border-gray-200 hover:border-dairy-primary hover:shadow-sm active:scale-95 relative hover:shadow-md">
                 <span className="hidden sm:block">Cart</span>
                 <ShoppingCart className="w-4 h-4 sm:hidden" />
                 {cartTotal > 0 && (
@@ -148,7 +148,7 @@ const Nav = () => {
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200 ease-out border border-gray-200 hover:border-purple-200 hover:shadow-sm active:scale-95 hover:shadow-md"
+                className="flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium text-gray-700 hover:text-dairy-secondary hover:bg-dairy-secondary/10 rounded-lg transition-all duration-200 ease-out border border-gray-200 hover:border-dairy-secondary hover:shadow-sm active:scale-95 hover:shadow-md"
                 aria-haspopup="true"
                 aria-expanded={isDropdownOpen}
               >
@@ -190,8 +190,8 @@ const Nav = () => {
                       to="/profile"
                       onClick={() => setIsDropdownOpen(false)}
                     >
-                      <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3 group-hover:bg-blue-200 transition-colors">
-                        <User className="w-4 h-4 text-blue-600" />
+                      <div className="w-8 h-8 bg-dairy-primary/20 rounded-lg flex items-center justify-center mr-3 group-hover:bg-dairy-primary/30 transition-colors">
+                        <User className="w-4 h-4 text-dairy-primary" />
                       </div>
                       <span className="font-medium">Profile</span>
                     </Link>

@@ -242,7 +242,7 @@ const CreateProduct = () => {
                   name="is_on_sale"
                   checked={formData.is_on_sale}
                   onChange={handleInputChange}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-dairy-primary focus:ring-dairy-primary border-gray-300 rounded"
                 />
                 <label className="ml-2 block text-sm text-gray-900">
                   This product is on sale
@@ -305,7 +305,7 @@ const CreateProduct = () => {
                           setFormData(prev => ({ ...prev, sale_end_date: "" }));
                         }
                       }}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      className="h-4 w-4 text-dairy-primary focus:ring-dairy-primary border-gray-300 rounded"
                     />
                     <label className="ml-2 block text-sm text-gray-900">
                       No expiry date (sale never ends)
@@ -313,8 +313,8 @@ const CreateProduct = () => {
                   </div>
 
                   <div className="md:col-span-2">
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                      <p className="text-sm text-blue-800">
+                    <div className="bg-dairy-primary/10 border border-dairy-primary/20 rounded-lg p-4">
+                      <p className="text-sm text-dairy-primary/80">
                         <strong>Note:</strong> Leave sale dates empty to make the sale always active. 
                         Discount percentage should be between 0 and 100.
                       </p>
@@ -373,7 +373,7 @@ const CreateProduct = () => {
             <Button
               type="submit"
               disabled={loading}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              className="bg-gradient-dairy hover:bg-gradient-dairy-hover"
             >
               {loading ? (
                 <div className="flex items-center gap-2">

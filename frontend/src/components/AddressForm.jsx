@@ -128,7 +128,7 @@ const AddressForm = ({ next, isCheckout = false }) => {
           <Button 
             type="submit" 
             disabled={formik.isSubmitting} 
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-gradient-dairy text-white hover:bg-gradient-dairy-hover transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {formik.isSubmitting ? "Updating..." : isCheckout ? "Continue to Payment" : "Update Address"}
           </Button>

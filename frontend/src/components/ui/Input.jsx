@@ -5,7 +5,7 @@ const Input = forwardRef(({ className = "", ...props }, ref) => {
   return (
     <WindmillInput
       ref={ref}
-      className={`block w-full px-4 py-2.5 text-gray-700 bg-white border border-gray-200 rounded-lg focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-colors duration-200 shadow-sm hover:border-gray-300 ${className}`}
+              className={`block w-full px-4 py-2.5 text-gray-700 bg-white border border-gray-200 rounded-lg focus:border-dairy-primary focus:ring focus:ring-dairy-primary focus:ring-opacity-50 transition-colors duration-200 shadow-sm hover:border-gray-300 ${className}`}
       {...props}
     />
   );

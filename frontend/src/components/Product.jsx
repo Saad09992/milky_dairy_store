@@ -80,7 +80,7 @@ const Product = ({ product }) => {
 
           {/* Product Info */}
           <div className="p-4 sm:p-5">
-            <h2 className="text-lg font-medium text-gray-900 mb-2 line-clamp-1 group-hover:text-blue-600 transition-colors duration-200">
+            <h2 className="text-lg font-medium text-gray-900 mb-2 line-clamp-1 group-hover:text-dairy-primary transition-colors duration-200">
               {product.name}
             </h2>
 
@@ -96,7 +96,7 @@ const Product = ({ product }) => {
                   </p>
                 </div>
               ) : (
-                <p className="text-xl font-semibold text-gray-900 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                <p className="text-xl font-semibold text-gray-900 bg-gradient-dairy-text">
                   {formatCurrency(displayPrice)}
                 </p>
               )}
@@ -141,7 +141,7 @@ const Product = ({ product }) => {
                 className={`w-full transition-all duration-200 shadow-sm hover:shadow-md active:scale-95 ${
                   isOnSale 
                     ? "bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700"
-                    : "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700"
+                    : "bg-gradient-dairy text-white hover:bg-gradient-dairy-hover"
                 }`}
                 onClick={addToCart}
                 disabled={isLoading}

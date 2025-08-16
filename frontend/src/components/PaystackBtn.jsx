@@ -28,7 +28,7 @@ const PaystackBtn = ({ amount, email, onSuccess, onClose }) => {
   return (
     <Button 
       onClick={handlePayment} 
-      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-sm hover:shadow-md flex items-center justify-center gap-2"
+              className="w-full bg-gradient-dairy text-white hover:bg-gradient-dairy-hover transition-all duration-200 shadow-sm hover:shadow-md flex items-center justify-center gap-2"
     >
       <CreditCard className="w-4 h-4" />
       Pay with Paystack

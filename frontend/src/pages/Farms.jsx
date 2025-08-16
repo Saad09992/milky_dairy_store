@@ -178,9 +178,9 @@ const Farms = () => {
 
         {/* Stats */}
         <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-blue-50 p-4 rounded-lg">
-            <div className="text-2xl font-bold text-blue-600">{totalFarms}</div>
-            <div className="text-sm text-blue-600">
+          <div className="bg-dairy-primary/10 p-4 rounded-lg">
+            <div className="text-2xl font-bold text-dairy-primary">{totalFarms}</div>
+            <div className="text-sm text-dairy-primary">
               {searchQuery ? 'Matching Farms' : 'Total Farms'}
             </div>
           </div>
@@ -265,7 +265,7 @@ const Farms = () => {
                         <Mail className="w-4 h-4 mr-2" />
                         <a 
                           href={`mailto:${farm.contact_email}`}
-                          className="hover:text-blue-600 transition-colors"
+                          className="hover:text-dairy-primary transition-colors"
                         >
                           {farm.contact_email}
                         </a>
@@ -276,7 +276,7 @@ const Farms = () => {
                         <Phone className="w-4 h-4 mr-2" />
                         <a 
                           href={`tel:${farm.contact_phone}`}
-                          className="hover:text-blue-600 transition-colors"
+                          className="hover:text-dairy-primary transition-colors"
                         >
                           {farm.contact_phone}
                         </a>
@@ -285,12 +285,12 @@ const Farms = () => {
                     {farm.website && (
                       <div className="flex items-center text-gray-500 text-sm">
                         <Globe className="w-4 h-4 mr-2" />
-                        <a 
-                          href={farm.website}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:text-blue-600 transition-colors"
-                        >
+                                                  <a 
+                            href={farm.website}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-dairy-primary transition-colors"
+                          >
                           Visit Website
                         </a>
                       </div>
@@ -309,7 +309,7 @@ const Farms = () => {
                   <div className="mt-auto pt-4">
                     <Button
                       onClick={() => handleViewFarm(farm)}
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center gap-2"
+                      className="w-full bg-gradient-dairy text-white hover:bg-gradient-dairy-hover flex items-center justify-center gap-2"
                     >
                       <Eye className="w-4 h-4" />
                       View Details

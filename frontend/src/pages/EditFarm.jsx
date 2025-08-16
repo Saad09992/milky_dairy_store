@@ -343,7 +343,7 @@ const EditFarm = () => {
                           <button
                             type="button"
                             onClick={() => removeCertification(index)}
-                            className="text-blue-600 hover:text-blue-800"
+                            className="text-dairy-primary hover:text-dairy-primary/80"
                           >
                             <X className="w-3 h-3" />
                           </button>

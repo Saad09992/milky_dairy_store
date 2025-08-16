@@ -139,7 +139,7 @@ const AdminProducts = () => {
             </Button>
             <Button
               onClick={() => navigate("/admin/products/create")}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              className="bg-gradient-dairy hover:bg-gradient-dairy-hover"
             >
               <Plus className="w-4 h-4 mr-2" />
               Add New Product
@@ -397,7 +397,7 @@ const AdminProducts = () => {
             </p>
             <Button
               onClick={() => navigate("/admin/products/create")}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              className="bg-gradient-dairy hover:bg-gradient-dairy-hover"
             >
               <Plus className="w-4 h-4 mr-2" />
               Add New Product
@@ -445,7 +445,7 @@ const AdminProducts = () => {
                         onClick={() => handlePageChange(pageNum)}
                         className={
                           currentPage === pageNum
-                            ? "bg-blue-600 text-white"
+                            ? "bg-dairy-primary text-white"
                             : ""
                         }
                       >

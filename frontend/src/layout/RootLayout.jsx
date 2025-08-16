@@ -24,7 +24,7 @@ function RootLayout({ children, loading }) {
         }
       `}</style>
 
-      <div className="min-h-screen flex flex-col bg-gray-50">
+              <div className="min-h-screen flex flex-col bg-dairy-bg">
         <Nav />
 
         {loading ? (
@@ -37,13 +37,13 @@ function RootLayout({ children, loading }) {
           </main>
         )}
 
-        <footer className="bg-white border-t border-gray-200 py-4">
+        <footer className="bg-white border-t border-dairy-border-light py-4">
           <div className="max-w-7xl mx-auto px-4 text-center">
             <p className="text-sm text-gray-600">
-              &copy; {new Date().getFullYear()} Milky Dairy —
+              &copy; {new Date().getFullYear()} Dairy Delight —
               <a
                 href="https://github.com/Saad09992"
-                className="text-blue-600 hover:text-blue-800 ml-1 transition-colors"
+                className="text-dairy-primary hover:text-dairy-primary/80 ml-1 transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
               >
